@@ -13,7 +13,7 @@ func Init(e *echo.Echo) {
 
 func home(e *echo.Echo) {
 	e.GET("/", func(c echo.Context) error {
-		return c.String(200, "Hello, World!")
+		return echotempl.Templ(c, 200, views.HomePage())
 	})
 }
 

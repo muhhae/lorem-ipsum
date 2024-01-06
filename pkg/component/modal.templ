@@ -1,0 +1,21 @@
+package component
+
+templ ResponsiveModal(id string, buttons ...func() templ.Component) {
+	<!-- Open the modal using ID.showModal() method -->
+	<dialog id={ id } class="modal modal-bottom sm:modal-middle">
+		<div class="modal-box">
+			{ children... }
+			<div class="modal-action">
+				<form method="dialog">
+					<!-- if there is a button in form, it will close the modal -->
+					if len(buttons) == 0 {
+						<button class="btn btn-primary" autofocus>Close</button>
+					}
+					for _, button := range buttons {
+						@button()
+					}
+				</form>
+			</div>
+		</div>
+	</dialog>
+}
