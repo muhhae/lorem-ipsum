@@ -21,10 +21,7 @@ log = "build-errors.log"
 poll = false
 poll_interval = 0
 post_cmd = []
-pre_cmd = [
-    "templ generate",
-    "npx tailwindcss -i internal/static/style/input.css -o internal/static/style/output.css",
-]
+pre_cmd = ["npm run air"]
 rerun = false
 rerun_delay = 500
 send_interrupt = false

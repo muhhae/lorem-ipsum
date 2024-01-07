@@ -35,7 +35,6 @@ fly.toml
 LICENSE
 README.md
 
-**/*.templ
 **/.git
 
 internal/static/style/output.css

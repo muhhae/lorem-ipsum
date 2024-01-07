@@ -1,5 +1,15 @@
 {
+  "scripts": {
+    "tailwind": "npx tailwindcss -i internal/static/style/input.css -o internal/static/style/output.css",
+    "templ": "templ generate",
+    "linuxgo": "CGO_ENABLED=0 GOOS=linux go build -o ./app ./cmd/app/.",
+    "wingo": "go build -o ./app.exe ./cmd/app/.",
+    "linbuild": "npm-run-all --parallel tailwind templ --sequential linuxgo",
+    "winbuild": "npm-run-all --parallel tailwind templ --sequential wingo",
+    "air": "npm-run-all --parallel tailwind templ"
+  },
   "devDependencies": {
-    "daisyui": "^4.5.0"
+    "daisyui": "^4.5.0",
+    "npm-run-all": "^4.1.5"
   }
 }
