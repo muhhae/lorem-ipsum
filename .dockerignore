@@ -3,27 +3,27 @@
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #
 # Binaries for programs and plugins
-**\*.exe
-**\*.exe~
-**\*.dll
-**\*.so
-**\*.dylib
+**/*.exe
+**/*.exe~
+**/*.dll
+**/*.so
+**/*.dylib
 
 # Test binary, built with `go test -c`
-**\*.test
+**/*.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
-**\*.out
+**/*.out
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
 # Go workspace file
-**\go.work
+**/go.work
 
-**\bin
-**\node_modules
-**\tmp
+**/bin
+**/node_modules
+**/tmp
 
 fly.toml
 
@@ -35,6 +35,8 @@ fly.toml
 LICENSE
 README.md
 
-**\*.templ
-**\.git
+**/*.templ
+**/.git
+
+internal/static/style/output.css
 

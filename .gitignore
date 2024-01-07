@@ -24,4 +24,6 @@ bin/
 node_modules/
 tmp/
 
+internal/static/style/output.css
+
 
