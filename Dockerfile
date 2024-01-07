@@ -2,7 +2,6 @@ FROM node:18.16.0 AS node
 WORKDIR /app
 
 COPY . ./
-RUN ls -al /
 
 RUN npm install
 RUN npx tailwindcss -i internal/static/style/input.css -o internal/static/style/output.css 
@@ -11,7 +10,6 @@ FROM golang:1.21.3 AS go
 WORKDIR /app
 
 COPY --from=node ./app/. ./
-RUN ls -al /
 
 RUN go mod download
 RUN go install github.com/a-h/templ/cmd/templ@latest
