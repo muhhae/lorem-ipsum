@@ -3,7 +3,10 @@ package user
 import (
 	"context"
 	"encoding/json"
+	"os"
+	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/muhhae/lorem-ipsum/internal/database/connection"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -67,30 +70,46 @@ func FindAll(filter User) ([]*User, error) {
 	return users, nil
 }
 
-func (u *User) Save() error {
+func (u *User) Save() (primitive.ObjectID, error) {
 	db := connection.GetDB()
 	if u.ID == primitive.NilObjectID {
-		_, err := db.Users.InsertOne(context.Background(), u)
-		return err
+		res, err := db.Users.InsertOne(context.Background(), u)
+		return res.InsertedID.(primitive.ObjectID), err
 	}
 	count, err := db.Users.CountDocuments(context.Background(), bson.M{"_id": u.ID})
 	if err != nil {
-		return err
+		return primitive.NilObjectID, err
 	}
 	if count > 0 {
 		res := db.Users.FindOneAndReplace(context.Background(), bson.M{"_id": u.ID}, u)
 		if res.Err() != nil {
-			return res.Err()
+			return primitive.NilObjectID, res.Err()
 		}
-		return nil
+		return u.ID, nil
 	}
-	_, err = db.Users.InsertOne(context.Background(), u)
-	return err
+	res, err := db.Users.InsertOne(context.Background(), u)
+	return res.InsertedID.(primitive.ObjectID), err
 }
 
 func (u *User) ToJSON() (string, error) {
 	j, err := json.Marshal(u)
 	return string(j), err
+}
+
+func (u *User) GenerateJWT() (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":  u.ID,
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+	})
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		panic("JWT_SECRET not set")
+	}
+	tokenString, err := token.SignedString([]byte(jwtSecret))
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }
 
 func (u *User) Authenticate(password string) (bool, error) {

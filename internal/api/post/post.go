@@ -11,28 +11,27 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func Upload(c echo.Context) {
+func Upload(c echo.Context) error {
 	authorID := c.Get("id").(primitive.ObjectID)
 	if authorID == primitive.NilObjectID {
-		c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid author"})
-		return
+		return echo.ErrBadRequest
 	}
 
 	content := c.FormValue("content")
 	imageData, err := c.FormFile("image")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return echo.ErrBadRequest
 	}
 
 	file, err := imageData.Open()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return echo.ErrBadRequest
 	}
 	defer file.Close()
 
 	data, err := io.ReadAll(file)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return echo.ErrBadRequest
 	}
 
 	img := imagemodel.Image{
@@ -42,8 +41,7 @@ func Upload(c echo.Context) {
 
 	imgID, err := img.Save()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-		return
+		return echo.ErrBadRequest
 	}
 
 	post := post.Post{
@@ -55,8 +53,8 @@ func Upload(c echo.Context) {
 
 	_, err = post.Save()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-		return
+		return echo.ErrBadRequest
 	}
 	c.JSON(http.StatusOK, map[string]string{"message": "success"})
+	return nil
 }

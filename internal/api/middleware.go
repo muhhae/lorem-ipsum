@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type jwtClaims struct {
+type JwtClaims struct {
 	ID primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	jwt.StandardClaims
 }
@@ -31,7 +31,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.Redirect(http.StatusUnauthorized, "/login")
 		}
 
-		claim := &jwtClaims{}
+		claim := &JwtClaims{}
 		token, err := jwt.ParseWithClaims(cookie.Value, claim, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -42,7 +42,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		if err != nil || token == nil || !token.Valid {
 			return c.Redirect(http.StatusUnauthorized, "/login")
 		}
-		claims, ok := token.Claims.(*jwtClaims)
+		claims, ok := token.Claims.(*JwtClaims)
 		if !ok {
 			return c.Redirect(http.StatusUnauthorized, "/login")
 		}
