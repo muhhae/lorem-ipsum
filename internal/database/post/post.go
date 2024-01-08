@@ -10,27 +10,28 @@ import (
 )
 
 type Post struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	AuthorID  primitive.ObjectID `json:"author" bson:"author,required"`
-	Content   string             `json:"content" bson:"content,required"`
-	Image     string             `json:"image" bson:"image,required"`
-	CreatedAt time.Time          `json:"createdAt" bson:"createdAt,required"`
+	ID        primitive.ObjectID   `json:"id" bson:"_id,omitempty"`
+	AuthorID  primitive.ObjectID   `json:"author" bson:"author,required"`
+	Content   string               `json:"content" bson:"content,required"`
+	ImageIDs  []primitive.ObjectID `json:"image" bson:"image,required"`
+	CreatedAt time.Time            `json:"createdAt" bson:"createdAt,required"`
 }
 
-func (p *Post) Save() error {
+func (p *Post) Save() (primitive.ObjectID, error) {
 	posts := connection.GetDB().Posts
 	if p.ID == primitive.NilObjectID {
 		_, err := posts.InsertOne(context.Background(), p)
-		return err
+		return primitive.NilObjectID, err
 	}
 	count, err := posts.CountDocuments(context.Background(), bson.M{"_id": p.ID})
 	if err != nil {
-		return err
+		return primitive.NilObjectID, err
+
 	}
 	if count > 0 {
 		res := posts.FindOneAndReplace(context.Background(), bson.M{"_id": p.ID}, p)
-		return res.Err()
+		return primitive.NilObjectID, res.Err()
 	}
-	_, err = posts.InsertOne(context.Background(), p)
-	return err
+	id, err := posts.InsertOne(context.Background(), p)
+	return id.InsertedID.(primitive.ObjectID), err
 }

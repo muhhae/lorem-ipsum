@@ -6,8 +6,9 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	"github.com/muhhae/lorem-ipsum/internal/api"
 	"github.com/muhhae/lorem-ipsum/internal/database/connection"
-	"github.com/muhhae/lorem-ipsum/internal/router"
+	"github.com/muhhae/lorem-ipsum/internal/views"
 )
 
 func InitAll() {
@@ -26,7 +27,9 @@ func echoInit() {
 		PORT = ":" + p
 	}
 	e := echo.New()
-	router.Init(e)
+	
+	views.Init(e)
+	api.Init(e)
 
 	e.Logger.Fatal(e.Start(PORT))
 }

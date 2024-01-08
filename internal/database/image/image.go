@@ -1,4 +1,4 @@
-package image
+package imagemodel
 
 import (
 	"context"
@@ -14,22 +14,22 @@ type Image struct {
 	Data  []byte             `json:"data" bson:"data,required"`
 }
 
-func (img *Image) Save() error {
+func (img *Image) Save() (primitive.ObjectID, error) {
 	imgs := connection.GetDB().Images
 	if img.ID == primitive.NilObjectID {
 		_, err := imgs.InsertOne(context.Background(), img)
-		return err
+		return primitive.NilObjectID, err
 	}
 	count, err := imgs.CountDocuments(context.Background(), bson.M{"_id": img.ID})
 	if err != nil {
-		return err
+		return primitive.NilObjectID, err
 	}
 	if count > 0 {
 		res := imgs.FindOneAndReplace(context.Background(), bson.M{"_id": img.ID}, img)
-		return res.Err()
+		return primitive.NilObjectID, res.Err()
 	}
-	_, err = imgs.InsertOne(context.Background(), img)
-	return err
+	imgID, err := imgs.InsertOne(context.Background(), img)
+	return imgID.InsertedID.(primitive.ObjectID), err
 }
 
 func FindOne(filter interface{}) (*Image, error) {
