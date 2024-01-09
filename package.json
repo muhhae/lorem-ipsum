@@ -7,7 +7,9 @@
     "linbuild": "npm-run-all --parallel tailwind templ --sequential linuxgo",
     "winbuild": "npm-run-all --parallel tailwind templ --sequential wingo",
     "air": "npm-run-all --sequential tailwind templ",
-    "dev": "npx tailwindcss -i internal/static/style/input.css -o internal/static/style/output.css --watch | air"
+    "dev": "npx tailwindcss -i internal/static/style/input.css -o internal/static/style/output.css --watch | air",
+    "exec": "./app.exe",
+    "start": "npm run winbuild && .\\app.exe"
   },
   "devDependencies": {
     "daisyui": "^4.5.0",

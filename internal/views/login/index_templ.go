@@ -41,7 +41,7 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--> <div class=\"relative hero min-h-screen bg-base-200\"><div class=\"flex absolute p-4 top-0 right-0 w-screen\"><div class=\"flex-1\"><a class=\"text-base-content font-black text-3xl\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--> <div class=\"relative hero min-h-screen bg-base-200\"><div class=\"flex absolute p-4 top-0 right-0 w-screen z-50\"><div class=\"flex-1\"><a class=\"text-base-content font-black text-2xl md:text-3xl\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -58,7 +58,7 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"hero-content flex-col lg:flex-row-reverse\"><div class=\"text-center lg:text-left\"><h1 class=\"text-5xl font-bold\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"hero-content md:pt-0 pt-20 flex-col md:flex-row-reverse\"><div class=\"text-center lg:text-left\"><h1 class=\"text-2xl md:text-5xl font-bold\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

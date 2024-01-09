@@ -82,7 +82,6 @@ func SignIn(c echo.Context) error {
 	var authorized bool
 	var u *user.User
 	email, err := mail.ParseAddress(req.EmailOrUsername)
-	fmt.Println(email)
 	if err != nil || email == nil {
 		u, err = user.FindOne(bson.M{"username": req.EmailOrUsername})
 		if err != nil {
@@ -122,6 +121,7 @@ func SignOut(c echo.Context) error {
 		Value:   "",
 		Expires: time.Now(),
 	})
+	c.Response().Writer.Header().Set("HX-Redirect", "/login")
 	return c.NoContent(http.StatusOK)
 }
 
@@ -139,10 +139,26 @@ func Me(c echo.Context) error {
 	if id == nil || id == "" || id == primitive.NilObjectID {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	me,err := user.FindOne(bson.M{"_id": id})
+	me, err := user.FindOne(bson.M{"_id": id})
 	if err != nil || me == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	me.Password = ""
-	return c.JSON(http.StatusOK, me)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"Email" : me.Email,
+		"Username" : me.Username,
+	})
+}
+
+func MyName(c echo.Context) error {
+	id := c.Get("id")
+	if id == nil || id == "" || id == primitive.NilObjectID {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+	me, err := user.FindOne(bson.M{"_id": id})
+	if err != nil || me == nil {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+	me.Password = ""
+	return c.String(http.StatusOK, me.Username)
 }

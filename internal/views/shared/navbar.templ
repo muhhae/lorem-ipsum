@@ -2,39 +2,46 @@ package shared
 
 import "github.com/muhhae/lorem-ipsum/pkg/component"
 
-
-
 templ NavBar() {
 	@component.Navbar() {
 		<div class="flex-1">
-			<a class="btn btn-ghost text-base-content font-black text-3xl">Lorem Ipsum</a>
+			<a class="btn btn-ghost text-primary font-black text-xl sm:text-3xl">Lorem Ipsum</a>
 		</div>
-		<div class="flex-none flex space-x-4">
+		<div
+			class="flex-none flex space-x-1 md:space-x-4"
+			hx-get="/api/v1/user/myName"
+			hx-target="#where-the-username-is"
+			hx-swap="innerHTML"
+			hx-trigger="load"
+			hx-on::after-swap="profileScript(event)"
+		>
 			@component.ThemeSwitch()
-			<div class="dropdown dropdown-end">
-				<div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-					<div class="w-10 rounded-full">
-						<img
-							alt="Tailwind CSS Navbar component"
-							src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-						/>
-					</div>
+			@profileScript()
+			<a id="remove-this" href="/login" class="btn btn-ghost text-lg btn-sm rounded-btn">Sign In</a>
+			<div id="remove-this-hidden" class="hidden dropdown dropdown-end">
+				<div>
+					<button id="where-the-username-is" class="btn text-lg font-bold btn-ghost btn-sm md:btn-md rounded-btn">
+						username
+					</button>
 				</div>
 				<ul
 					tabindex="0"
 					class="menu menu-sm dropdown-content mt-3 z-[1] 
-                        p-2 shadow bg-base-100 rounded-box w-52"
+                        p-2 shadow bg-base-300 w-52"
 				>
-					<li>
-						<a class="justify-between">
-							Profile
-							<span class="badge">New</span>
-						</a>
-					</li>
-					<li><a>Settings</a></li>
-					<li><a>Logout</a></li>
+					<li><a hx-get="/api/v1/user/logout" hx-swap="none">Logout</a></li>
 				</ul>
 			</div>
 		</div>
 	}
+}
+
+templ profileScript() {
+	<script>
+	function profileScript(event) {
+		console.log(event)
+		document.getElementById('remove-this-hidden').classList.remove('hidden');
+		document.getElementById('remove-this').classList.add('hidden');
+	}
+	</script>
 }

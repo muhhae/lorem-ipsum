@@ -40,4 +40,5 @@ func InitUser(g *echo.Group) {
 	u.GET("/session", user.Session, Auth)
 	u.GET("/logout", user.SignOut)
 	u.GET("/me", user.Me, Auth)
+	u.GET("/myName", user.MyName, Auth)
 }
