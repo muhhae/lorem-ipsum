@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"time"
 
@@ -34,7 +35,17 @@ func FromJSON(u string) (*User, error) {
 	return user, nil
 }
 
-func FindOne(filter User) (*User, error) {
+func Count(filter bson.M) (int64, error) {
+	fmt.Println("filter", filter)
+	db := connection.GetDB()
+	count, err := db.Users.CountDocuments(context.Background(), filter)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func FindOne(filter bson.M) (*User, error) {
 	db := connection.GetDB()
 	var user User
 	res := db.Users.FindOne(context.Background(), filter)
@@ -48,7 +59,7 @@ func FindOne(filter User) (*User, error) {
 	return &user, nil
 }
 
-func FindAll(filter User) ([]*User, error) {
+func FindAll(filter bson.M) ([]*User, error) {
 	db := connection.GetDB()
 	var users []*User
 	cur, err := db.Users.Find(context.Background(), filter)

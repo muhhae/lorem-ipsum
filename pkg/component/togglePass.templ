@@ -19,15 +19,12 @@ script togglePass() {
     document.addEventListener('DOMContentLoaded', function() {
         var checkbox = document.querySelector('#show-password');
         var password = document.querySelector('#password');
-        var confirmPassword = document.querySelector('#confirm-password');
 
         checkbox.addEventListener('change', function() {
             if (checkbox.checked) {
                 password.type = 'text';
-                confirmPassword.type = 'text';
             } else {
                 password.type = 'password';
-                confirmPassword.type = 'password';
             }
         });
     });

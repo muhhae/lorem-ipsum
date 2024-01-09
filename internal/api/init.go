@@ -37,11 +37,7 @@ func InitUser(g *echo.Group) {
 	u := g.Group("/user")
 	u.POST("/register", user.SignUp)
 	u.POST("/login", user.SignIn)
-	u.GET("/me", func(c echo.Context) error {
-		id := c.Get("id")
-		if id == nil {
-			return c.String(401, "Login You Cunt")
-		}
-		return c.String(200, "Helloo"+id.(string))
-	}, Auth)
+	u.GET("/session", user.Session, Auth)
+	u.GET("/logout", user.SignOut)
+	u.GET("/me", user.Me, Auth)
 }

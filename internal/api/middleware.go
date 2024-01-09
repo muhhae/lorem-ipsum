@@ -36,7 +36,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
-			return jwtSecret, nil
+			return []byte(jwtSecret), nil
 		})
 
 		if err != nil || token == nil || !token.Valid {

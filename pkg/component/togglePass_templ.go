@@ -58,23 +58,20 @@ func TogglePass() templ.Component {
 
 func togglePass() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_togglePass_2cf0`,
-		Function: `function __templ_togglePass_2cf0(){document.addEventListener('DOMContentLoaded', function() {
+		Name: `__templ_togglePass_1fca`,
+		Function: `function __templ_togglePass_1fca(){document.addEventListener('DOMContentLoaded', function() {
         var checkbox = document.querySelector('#show-password');
         var password = document.querySelector('#password');
-        var confirmPassword = document.querySelector('#confirm-password');
 
         checkbox.addEventListener('change', function() {
             if (checkbox.checked) {
                 password.type = 'text';
-                confirmPassword.type = 'text';
             } else {
                 password.type = 'password';
-                confirmPassword.type = 'password';
             }
         });
     });}`,
-		Call:       templ.SafeScript(`__templ_togglePass_2cf0`),
-		CallInline: templ.SafeScriptInline(`__templ_togglePass_2cf0`),
+		Call:       templ.SafeScript(`__templ_togglePass_1fca`),
+		CallInline: templ.SafeScriptInline(`__templ_togglePass_1fca`),
 	}
 }
