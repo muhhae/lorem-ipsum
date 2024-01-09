@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 	"net/mail"
 	"time"
@@ -18,18 +19,18 @@ type SignUpRequest struct {
 func SignUp(c echo.Context) error {
 	req := SignUpRequest{}
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		return c.String(http.StatusBadRequest, "Please fill in valid input")
 	}
 	if err := c.Validate(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		return c.String(http.StatusBadRequest, "Please fill in valid input")
 	}
 	u, _ := user.FindOne(user.User{Email: req.Email})
 	if u != nil {
-		return c.JSON(http.StatusConflict, map[string]string{"message": "email already exists"})
+		return c.String(http.StatusConflict, "User with that Email already exists try sign in")
 	}
 	u, _ = user.FindOne(user.User{Username: req.Username})
 	if u != nil {
-		return c.JSON(http.StatusConflict, map[string]string{"message": "username already exists"})
+		return c.String(http.StatusConflict, "Username already taken please choose another one")
 	}
 	newUser := user.User{
 		Email:    req.Email,
@@ -38,12 +39,12 @@ func SignUp(c echo.Context) error {
 	}
 	_, err := newUser.Save()
 	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
+		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 
 	jwt, err := newUser.GenerateJWT()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "internal server error"})
+		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 	c.SetCookie(&http.Cookie{
 		Name:    "jwt",
@@ -61,36 +62,37 @@ type SignInRequest struct {
 func SignIn(c echo.Context) error {
 	req := SignInRequest{}
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	if err := c.Validate(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	var authorized bool
 	var u *user.User
-	_, err := mail.ParseAddress(req.EmailOrUsername)
-	if err == nil {
+	email, err := mail.ParseAddress(req.EmailOrUsername)
+	fmt.Println(email)
+	if err != nil || email == nil {
 		u, err = user.FindOne(user.User{Username: req.EmailOrUsername})
 		if err != nil {
-			return c.JSON(http.StatusNotFound, map[string]string{"message": "user not found"})
+			return c.String(http.StatusNotFound, "User with that Username not found")
 		}
 		authorized, err = u.Authenticate(req.Password)
 		if !authorized || err != nil {
-			return c.JSON(http.StatusUnauthorized, map[string]string{"message": "wrong password"})
+			return c.String(http.StatusUnauthorized, "Wrong password")
 		}
 	} else {
 		u, err = user.FindOne(user.User{Email: req.EmailOrUsername})
 		if err != nil {
-			return c.JSON(http.StatusNotFound, map[string]string{"message": "user not found"})
+			return c.String(http.StatusNotFound, "User with that Email not found")
 		}
 		authorized, err = u.Authenticate(req.Password)
 		if !authorized || err != nil {
-			return c.JSON(http.StatusUnauthorized, map[string]string{"message": "wrong password"})
+			return c.String(http.StatusUnauthorized, "Wrong password")
 		}
 	}
 	jwt, err := u.GenerateJWT()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "internal server error"})
+		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 
 	c.SetCookie(&http.Cookie{
@@ -98,5 +100,5 @@ func SignIn(c echo.Context) error {
 		Value:   jwt,
 		Expires: time.Now().Add(24 * time.Hour),
 	})
-	return c.NoContent(http.StatusOK)
+	return c.Redirect(http.StatusFound, "/")
 }

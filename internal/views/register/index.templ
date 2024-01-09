@@ -1,10 +1,10 @@
-package login
+package register
 
 import "github.com/muhhae/lorem-ipsum/pkg/template"
 import "github.com/muhhae/lorem-ipsum/pkg/component"
 
 templ Index() {
-	@template.Base("Sign in") {
+	@template.Base("Sign Up") {
 		<div class="relative hero min-h-screen bg-base-200">
 			<div class="flex absolute p-4 top-0 right-0 w-screen">
 				<div class="flex-1">
@@ -16,24 +16,36 @@ templ Index() {
 			</div>
 			<div class="hero-content flex-col lg:flex-row-reverse">
 				<div class="text-center lg:text-left">
-					<h1 class="text-5xl font-bold">Sign In Now!</h1>
+					<h1 class="text-5xl font-bold">Sign Up Now!</h1>
 					<p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
 				</div>
 				<div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
 					<form
-						hx-post="/api/v1/user/login"
+						hx-post="/api/v1/user/register"
 						hx-on::response-error="alert(event.detail.xhr.responseText)"
 						hx-swap="None"
 						class="card-body"
 					>
 						<div class="form-control">
 							<label class="label">
-								<span for="username" class="label-text">Email or Username</span>
+								<span for="email" class="label-text">Email</span>
 							</label>
 							<input
 								id="email"
 								name="email"
-								placeholder="email or username"
+								placeholder="email"
+								class="input input-bordered"
+								required
+							/>
+						</div>
+						<div class="form-control">
+							<label class="label">
+								<span for="username" class="label-text">Username</span>
+							</label>
+							<input
+								id="username"
+								name="username"
+								placeholder="username"
 								class="input input-bordered"
 								required
 							/>
@@ -51,20 +63,24 @@ templ Index() {
 								required
 							/>
 						</div>
-						<label class="label">
-							<a href="#" class="label-text-alt link link-hover">Forgot password?</a>
-						</label>
-						@component.TogglePass()
+						<div class="form-control">
+							<label for="confirm-password" class="label">
+								<span class="label-text">Confirm Password</span>
+							</label>
+							<input
+								id="confirm-password"
+								name="confirm-password"
+								type="password"
+								placeholder="confirm password"
+								class="input password-input input-bordered"
+								required
+							/>
+						</div>
+                        @component.TogglePass()
 						<div class="form-control mt-6">
-							<button class="text-lg  btn btn-primary">Sign In</button>
+							<button class="text-lg  btn btn-primary">Sign Up</button>
 						</div>
 					</form>
-					<div class="divider">
-						or
-					</div>
-					<div class="card-body">
-						<a class="text-lg btn btn-primary" href="/register">Sign Up</a>
-					</div>
 				</div>
 			</div>
 		</div>

@@ -27,9 +27,9 @@ func echoInit() {
 		PORT = ":" + p
 	}
 	e := echo.New()
-	
+	defer e.Close()
+
 	views.Init(e)
 	api.Init(e)
-
 	e.Logger.Fatal(e.Start(PORT))
 }

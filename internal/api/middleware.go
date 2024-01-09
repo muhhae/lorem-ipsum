@@ -25,10 +25,10 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cookie, err := c.Cookie("jwt")
 		if err != nil {
-			return c.Redirect(http.StatusUnauthorized, "/login")
+			return c.Redirect(http.StatusFound, "/login")
 		}
 		if cookie.Value == "" {
-			return c.Redirect(http.StatusUnauthorized, "/login")
+			return c.Redirect(http.StatusFound, "/login")
 		}
 
 		claim := &JwtClaims{}
@@ -40,11 +40,13 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		})
 
 		if err != nil || token == nil || !token.Valid {
-			return c.Redirect(http.StatusUnauthorized, "/login")
+			return c.Redirect(http.StatusFound, "/login")
+
 		}
 		claims, ok := token.Claims.(*JwtClaims)
 		if !ok {
-			return c.Redirect(http.StatusUnauthorized, "/login")
+			return c.Redirect(http.StatusFound, "/login")
+
 		}
 		c.Set("id", claims.ID)
 		return next(c)
