@@ -109,6 +109,7 @@ func SignIn(c echo.Context) error {
 	c.SetCookie(&http.Cookie{
 		Name:    "jwt",
 		Value:   jwt,
+		Path:    "/",
 		Expires: time.Now().Add(24 * time.Hour),
 	})
 	c.Response().Writer.Header().Set("HX-Redirect", "/")
@@ -145,8 +146,8 @@ func Me(c echo.Context) error {
 	}
 	me.Password = ""
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"Email" : me.Email,
-		"Username" : me.Username,
+		"Email":    me.Email,
+		"Username": me.Username,
 	})
 }
 

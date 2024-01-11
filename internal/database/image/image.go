@@ -17,8 +17,8 @@ type Image struct {
 func (img *Image) Save() (primitive.ObjectID, error) {
 	imgs := connection.GetDB().Images
 	if img.ID == primitive.NilObjectID {
-		_, err := imgs.InsertOne(context.Background(), img)
-		return primitive.NilObjectID, err
+		inserted, err := imgs.InsertOne(context.Background(), img)
+		return inserted.InsertedID.(primitive.ObjectID), err
 	}
 	count, err := imgs.CountDocuments(context.Background(), bson.M{"_id": img.ID})
 	if err != nil {
@@ -32,7 +32,7 @@ func (img *Image) Save() (primitive.ObjectID, error) {
 	return imgID.InsertedID.(primitive.ObjectID), err
 }
 
-func FindOne(filter interface{}) (*Image, error) {
+func FindOne(filter bson.M) (*Image, error) {
 	imgs := connection.GetDB().Images
 	img := Image{}
 	res := imgs.FindOne(context.Background(), filter)

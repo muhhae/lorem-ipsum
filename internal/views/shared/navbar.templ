@@ -17,10 +17,10 @@ templ NavBar() {
 		>
 			@component.ThemeSwitch()
 			@profileScript()
-			<a id="remove-this" href="/login" class="btn btn-ghost text-lg btn-sm rounded-btn">Sign In</a>
-			<div id="remove-this-hidden" class="hidden dropdown dropdown-end">
+			<a id="remove-this" href="/login" class="btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn">Sign In</a>
+			<div id="remove-this-hidden" class="hidden h-full dropdown dropdown-end">
 				<div>
-					<button id="where-the-username-is" class="btn text-lg font-bold btn-ghost btn-sm md:btn-md rounded-btn">
+					<button id="where-the-username-is" class="btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn">
 						username
 					</button>
 				</div>
@@ -39,7 +39,6 @@ templ NavBar() {
 templ profileScript() {
 	<script>
 	function profileScript(event) {
-		console.log(event)
 		document.getElementById('remove-this-hidden').classList.remove('hidden');
 		document.getElementById('remove-this').classList.add('hidden');
 	}

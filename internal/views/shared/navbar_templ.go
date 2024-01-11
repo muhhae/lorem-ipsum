@@ -52,7 +52,7 @@ func NavBar() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a id=\"remove-this\" href=\"/login\" class=\"btn btn-ghost text-lg btn-sm rounded-btn\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a id=\"remove-this\" href=\"/login\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -61,7 +61,7 @@ func NavBar() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a><div id=\"remove-this-hidden\" class=\"hidden dropdown dropdown-end\"><div><button id=\"where-the-username-is\" class=\"btn text-lg font-bold btn-ghost btn-sm md:btn-md rounded-btn\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a><div id=\"remove-this-hidden\" class=\"hidden h-full dropdown dropdown-end\"><div><button id=\"where-the-username-is\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -118,7 +118,6 @@ func profileScript() templ.Component {
 		}
 		templ_7745c5c3_Var8 := `
 	function profileScript(event) {
-		console.log(event)
 		document.getElementById('remove-this-hidden').classList.remove('hidden');
 		document.getElementById('remove-this').classList.add('hidden');
 	}

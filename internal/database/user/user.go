@@ -14,11 +14,19 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const (
+	Unverified = "unverified"
+	Verified   = "verified"
+	Admin      = "admin"
+	Banned     = "banned"
+)
+
 type User struct {
 	ID       primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Email    string             `json:"email" bson:"email,required"`
 	Username string             `json:"username" bson:"username,required"`
 	Password string             `json:"password" bson:"password,required"`
+	Access   string             `json:"access" bson:"access, required"`
 }
 
 func FromJSON(u string) (*User, error) {

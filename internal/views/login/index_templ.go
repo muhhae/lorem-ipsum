@@ -41,7 +41,15 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--> <div class=\"relative hero min-h-screen bg-base-200\"><div class=\"flex absolute p-4 top-0 right-0 w-screen z-50\"><div class=\"flex-1\"><a class=\"text-base-content font-black text-2xl md:text-3xl\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--> <div class=\"relative hero min-h-screen bg-base-200\"><div class=\"flex absolute p-4 top-0 right-0 z-50\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = component.ThemeSwitch().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"hero-content md:pt-0 pt-20 flex-col md:flex-row-reverse\"><div class=\"text-center lg:text-left\"><a href=\"/\" class=\"btn btn-ghost hover:bg-transparent hover:text-primary mb-8 w-56 h-auto p-2 text-base-content font-black text-5xl md:text-7xl\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -50,15 +58,7 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></div><div class=\"flex-0\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = component.ThemeSwitch().Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"hero-content md:pt-0 pt-20 flex-col md:flex-row-reverse\"><div class=\"text-center lg:text-left\"><h1 class=\"text-2xl md:text-5xl font-bold\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a><h1 class=\"text-2xl md:text-5xl font-bold\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

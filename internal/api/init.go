@@ -24,13 +24,19 @@ func Init(e *echo.Echo) {
 	g := e.Group("/api/v1") // /api/v1
 
 	g.Static("/static", "internal/static")
-	InitPost(g)
 	InitUser(g)
+	InitPost(g)
+	InitImage(g)
 }
 
 func InitPost(g *echo.Group) {
 	p := g.Group("/post")
 	p.POST("/upload", post.Upload, Auth)
+}
+
+func InitImage(g *echo.Group) {
+	i := g.Group("/image")
+	i.GET("/:id", post.GetImage)
 }
 
 func InitUser(g *echo.Group) {

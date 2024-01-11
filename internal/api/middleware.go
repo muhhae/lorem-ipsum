@@ -7,6 +7,8 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"github.com/muhhae/lorem-ipsum/internal/database/user"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -25,10 +27,12 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cookie, err := c.Cookie("jwt")
 		if err != nil {
-			return c.Redirect(http.StatusFound, "/login")
+			fmt.Println("1", err)
+			return c.NoContent(http.StatusUnauthorized)
 		}
 		if cookie.Value == "" {
-			return c.Redirect(http.StatusFound, "/login")
+			fmt.Println("2", "empty cookie")
+			return c.NoContent(http.StatusUnauthorized)
 		}
 
 		claim := &JwtClaims{}
@@ -40,14 +44,21 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		})
 
 		if err != nil || token == nil || !token.Valid {
-			return c.Redirect(http.StatusFound, "/login")
-
+			fmt.Println("3", err, token)
+			return c.NoContent(http.StatusUnauthorized)
 		}
 		claims, ok := token.Claims.(*JwtClaims)
 		if !ok {
-			return c.Redirect(http.StatusFound, "/login")
+			fmt.Println("4", "claims not ok")
+			return c.NoContent(http.StatusUnauthorized)
 
 		}
+		u, err := user.FindOne(bson.M{"_id": claims.ID})
+		if err != nil || u == nil || u.Access == user.Banned {
+			fmt.Println("5", "User not found or banned")
+			return c.NoContent(http.StatusUnauthorized)
+		}
+		fmt.Println("6", "Success")
 		c.Set("id", claims.ID)
 		return next(c)
 	}
