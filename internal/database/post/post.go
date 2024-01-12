@@ -54,6 +54,7 @@ func RetrievePosts(filter bson.M, iteration int64) ([]Post, error) {
 	cursor, err := connection.GetDB().Posts.Find(context.Background(), filter, &options.FindOptions{
 		Limit: &limits,
 		Skip:  &skip,
+		Sort:  bson.M{"createdAt": -1},
 	})
 	if err != nil {
 		return nil, err
