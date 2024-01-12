@@ -11,8 +11,9 @@ import "io"
 import "bytes"
 
 import "github.com/muhhae/lorem-ipsum/pkg/template"
-import "github.com/drhodes/golorem"
-import "math/rand"
+
+// import "github.com/drhodes/golorem"
+// import "math/rand"
 import "github.com/muhhae/lorem-ipsum/internal/views/shared"
 
 func Index() templ.Component {
@@ -46,17 +47,7 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"lg:w-2/5 mx-auto\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			for i := 0; i < 10; i++ {
-				templ_7745c5c3_Err = Post(lorem.Sentence(1, 3), lorem.Paragraph(1, 3), rand.Intn(999999), rand.Intn(999999)).Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"post-container\" class=\"lg:w-2/5 w-full flex flex-col mx-auto\"><div id=\"loader\" hx-trigger=\"intersect\" hx-swap=\"outerHTML\" hx-get=\"/api/v1/post/Default?iteration=0\" class=\"loading loading-spinner loading-lg mx-auto\"></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

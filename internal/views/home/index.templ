@@ -1,8 +1,9 @@
 package home
 
 import "github.com/muhhae/lorem-ipsum/pkg/template"
-import "github.com/drhodes/golorem"
-import "math/rand"
+
+// import "github.com/drhodes/golorem"
+// import "math/rand"
 import "github.com/muhhae/lorem-ipsum/internal/views/shared"
 
 templ Index() {
@@ -10,10 +11,14 @@ templ Index() {
 		@shared.NavBar()
 		<div class="p-2 md:p-10 md:pt-3">
 			@Form()
-			<div class="lg:w-2/5 mx-auto">
-				for i := 0; i < 10; i++ {
-					@Post(lorem.Sentence(1,3), lorem.Paragraph(1,3), rand.Intn(999999), rand.Intn(999999))
-				}
+			<div id="post-container" class="lg:w-2/5 w-full flex flex-col mx-auto">
+				<div
+					id="loader"
+					hx-trigger="intersect"
+					hx-swap="outerHTML"
+					hx-get="/api/v1/post/Default?iteration=0"
+					class="loading loading-spinner loading-lg mx-auto"
+				></div>
 			</div>
 		</div>
 	}

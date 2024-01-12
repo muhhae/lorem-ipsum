@@ -7,6 +7,7 @@ import (
 	"github.com/muhhae/lorem-ipsum/internal/database/connection"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Post struct {
@@ -34,4 +35,29 @@ func (p *Post) Save() (primitive.ObjectID, error) {
 	}
 	id, err := posts.InsertOne(context.Background(), p)
 	return id.InsertedID.(primitive.ObjectID), err
+}
+
+func FindOne(filter bson.M) (*Post, error) {
+	var post Post
+	err := connection.GetDB().Posts.FindOne(context.Background(), filter).Decode(&post)
+	return &post, err
+}
+
+const (
+	postLimit int64 = 4
+)
+
+func RetrievePosts(filter bson.M, iteration int64) ([]Post, error) {
+	var posts []Post
+	limits := postLimit
+	skip := iteration * postLimit
+	cursor, err := connection.GetDB().Posts.Find(context.Background(), filter, &options.FindOptions{
+		Limit: &limits,
+		Skip:  &skip,
+	})
+	if err != nil {
+		return nil, err
+	}
+	err = cursor.All(context.Background(), &posts)
+	return posts, err
 }

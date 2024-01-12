@@ -4,11 +4,16 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
 	imagemodel "github.com/muhhae/lorem-ipsum/internal/database/image"
 	"github.com/muhhae/lorem-ipsum/internal/database/post"
+	"github.com/muhhae/lorem-ipsum/internal/database/user"
+	"github.com/muhhae/lorem-ipsum/internal/views/home"
+	echotempl "github.com/muhhae/lorem-ipsum/pkg/echoTempl"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -75,4 +80,39 @@ func Upload(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error saving post")
 	}
 	return c.NoContent(http.StatusOK)
+}
+
+func Default(c echo.Context) error {
+	iterationStr := c.QueryParam("iteration")
+	iteration, err := strconv.Atoi(iterationStr)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid iteration")
+	}
+	posts, err := post.RetrievePosts(nil, int64(iteration))
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error retrieving posts")
+	}
+	postDatas := make([]home.PostData, len(posts))
+	for i, post := range posts {
+		owner, err := user.FindOne(bson.M{"_id": post.AuthorID})
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Error retrieving posts")
+		}
+		images := make([]string, len(post.ImageIDs))
+		for i, imgID := range post.ImageIDs {
+			images[i] = fmt.Sprintf("/api/v1/image/%s", imgID.Hex())
+		}
+		postData := home.PostData{
+			Username:     owner.Username,
+			Content:      post.Content,
+			ImgSrc:       images,
+			LikeCount:    0,
+			CommentCount: 0,
+		}
+		postDatas[i] = postData
+	}
+	if len(postDatas) == 0 {
+		return echotempl.Templ(c, 200, home.EndOfFeed())
+	}
+	return echotempl.Templ(c, 200, home.ManyPost(postDatas, iteration))
 }
