@@ -2,10 +2,9 @@ package home
 
 templ Form() {
 	<form
+		id="post-form"
 		class="lg:w-2/5 text-xl mx-auto card-body"
-		hx-encoding="multipart/form-data"
-		hx-post="/api/v1/post/upload"
-		hx-swap="none"
+		
 	>
 		<div class="form-control">
 			<label for="content" class="label">

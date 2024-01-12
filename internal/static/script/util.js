@@ -31,8 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         e.target.value = null
     })
-
-    fileInput.addEventListener('htmx:configRequest', (e) => {
+    postForm = document.getElementById('post-form')
+    postForm.addEventListener('submit', async (e) => {
+        e.preventDefault()
         var formData = new FormData(e.target)
         if (Images.length <= 0) {
             alert('You must select at least one image')
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return
         }
         Images.forEach(image => {
+            console.log('image :', image)
             if (image.size > maxFileSize) {
                 alert('File size must be less than 5MB')
                 e.preventDefault()
@@ -52,8 +54,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             formData.append('images', image)
         })
-        e.detail.xhr.body = formData
+        console.log('formData :', Array.from(formData.entries()))
+        await fetch('/api/v1/post/upload', {
+            method: 'POST',
+            body: formData
+        }).then(res => {
+            if (!res.ok) {
+                alert(res.text)
+            } else {
+                Images = []
+                selectedImages.innerHTML = ''
+            }
+        })
+
     })
+    // postForm.addEventListener('htmx:configRequest', (e) => {
+    //     console.log('before :', e.detail.body)
+    //     var formData = new FormData(e.target)
+    //     if (Images.length <= 0) {
+    //         alert('You must select at least one image')
+    //         e.preventDefault()
+    //         return
+    //     }
+    //     if (Images.length > maxFileCount) {
+    //         alert('You can only upload up to 8 images')
+    //         e.preventDefault()
+    //         return
+    //     }
+    //     Images.forEach(image => {
+    //         console.log('image :', image)
+    //         if (image.size > maxFileSize) {
+    //             alert('File size must be less than 5MB')
+    //             e.preventDefault()
+    //             return
+    //         }
+    //         formData.append('images', image)
+    //     })
+    //     e.detail.body = formData
+    //     console.log('after :', e.detail.body)
+    // })
 
 
 })

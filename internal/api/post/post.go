@@ -1,6 +1,7 @@
 package post
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -17,6 +18,7 @@ func Upload(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 	content := c.FormValue("content")
+	fmt.Println(content)
 	multipartForm, err := c.MultipartForm()
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid form")
