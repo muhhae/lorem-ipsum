@@ -120,6 +120,7 @@ func SignOut(c echo.Context) error {
 	c.SetCookie(&http.Cookie{
 		Name:    "jwt",
 		Value:   "",
+		Path:    "/",
 		Expires: time.Unix(0, 0),
 		MaxAge:  -1,
 	})
@@ -130,6 +131,10 @@ func SignOut(c echo.Context) error {
 func Session(c echo.Context) error {
 	id := c.Get("id")
 	if id == nil {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+	me, err := user.FindOne(bson.M{"_id": id})
+	if err != nil || me == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	c.Response().Header().Set("HX-Redirect", "/")
