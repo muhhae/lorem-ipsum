@@ -7,9 +7,10 @@ templ Base(title string) {
 			<title>{ title }</title>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta charset="UTF-8"/>
-			<link rel="stylesheet" href="/static/style/output.css"/>
+			<link rel="stylesheet" href="/api/v1/static/style/output.css"/>
+			<script src="https://unpkg.com/htmx.org@1.9.10"></script>
 		</head>
-		<body>
+		<body class="h-min-screen">
 			{ children... }
 		</body>
 	</html>

@@ -14,6 +14,7 @@ type Database struct {
 	Users    *mongo.Collection
 	Posts    *mongo.Collection
 	Comments *mongo.Collection
+	Images    *mongo.Collection
 }
 
 var db Database
@@ -57,5 +58,6 @@ func NewDatabase(client *mongo.Client) Database {
 		Users:    client.Database("lorem_ipsum").Collection("users"),
 		Posts:    client.Database("lorem_ipsum").Collection("posts"),
 		Comments: client.Database("lorem_ipsum").Collection("comments"),
+		Images:    client.Database("lorem_ipsum").Collection("image"),
 	}
 }

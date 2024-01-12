@@ -6,10 +6,14 @@
     "wingo": "go build -o ./app.exe ./cmd/app/.",
     "linbuild": "npm-run-all --parallel tailwind templ --sequential linuxgo",
     "winbuild": "npm-run-all --parallel tailwind templ --sequential wingo",
-    "air": "npm-run-all --parallel tailwind templ"
+    "air": "npm-run-all --sequential tailwind templ",
+    "dev": "npx tailwindcss -i internal/static/style/input.css -o internal/static/style/output.css --watch | air",
+    "exec": ".\\app.exe",
+    "start": "npm-run-all --sequential winbuild exec"
   },
   "devDependencies": {
     "daisyui": "^4.5.0",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "tailwindcss": "^3.4.1"
   }
 }
