@@ -120,7 +120,8 @@ func SignOut(c echo.Context) error {
 	c.SetCookie(&http.Cookie{
 		Name:    "jwt",
 		Value:   "",
-		Expires: time.Now(),
+		Expires: time.Unix(0, 0),
+		MaxAge:  -1,
 	})
 	c.Response().Writer.Header().Set("HX-Redirect", "/login")
 	return c.NoContent(http.StatusOK)
