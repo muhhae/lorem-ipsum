@@ -27,12 +27,20 @@ func Init(e *echo.Echo) {
 	InitUser(g)
 	InitPost(g)
 	InitImage(g)
+	initReaction(g)
 }
 
 func InitPost(g *echo.Group) {
 	p := g.Group("/post")
 	p.POST("/upload", post.Upload, Auth)
-	p.GET("/Default", post.Default)
+	p.GET("/Default", post.Default, SoftAuth)
+}
+
+func initReaction(g *echo.Group) {
+	r := g.Group("/reaction")
+	r.GET("/count/:id", post.ReactionCount)
+	r.GET("/myreaction/:id", post.MyReaction, SoftAuth)
+	r.POST("/react/:id", post.React, Auth)
 }
 
 func InitImage(g *echo.Group) {

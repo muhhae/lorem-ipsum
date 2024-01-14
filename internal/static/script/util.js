@@ -96,3 +96,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 })
+
+function reactAndRefresh(e) {
+    if (e.detail.xhr.status != 200) {
+        return
+    }
+    var elem = e.target
+    var parent = elem.parentElement
+    var dislike = parent.querySelector('.dislike')
+    var like = parent.querySelector('.like')
+
+    var likeurl = like.getAttribute('hx-post')
+    var dislikeurl = dislike.getAttribute('hx-post')
+
+    if (elem == like) {
+        dislike.classList.remove('text-primary')
+        if (likeurl.includes("value=1")) {
+            likeurl = likeurl.replace('value=1', 'value=0')
+        } else {
+            likeurl = likeurl.replace('value=0', 'value=1')
+        }
+        if (dislikeurl.includes("value=0")) {
+            dislikeurl = dislikeurl.replace('value=0', 'value=-1')
+        }
+    } else {
+        like.classList.remove('text-primary')
+        if (dislikeurl.includes("value=-1")) {
+            dislikeurl = dislikeurl.replace('value=-1', 'value=0')
+        } else {
+            dislikeurl = dislikeurl.replace('value=0', 'value=-1')
+        }
+        if (likeurl.includes("value=0")) {
+            likeurl = likeurl.replace('value=0', 'value=1')
+        }
+    }
+    elem.classList.toggle('text-primary')
+
+    like.setAttribute('hx-post', likeurl)
+    dislike.setAttribute('hx-post', dislikeurl)
+
+    htmx.process(like)
+    htmx.process(dislike)
+
+    var likeCount = parent.querySelector('.like-count')
+    htmx.trigger(likeCount, 'update')
+
+
+}
+
+function urlProc(url) {
+
+
+    return url
+}

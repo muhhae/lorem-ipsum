@@ -40,3 +40,33 @@ func (r *Reaction) Save() (primitive.ObjectID, error) {
 	}
 	return currentReaction.ID, nil
 }
+
+func CountReaction(postID primitive.ObjectID) (int64, error) {
+	col := connection.GetDB().Reactions
+	like, err := col.CountDocuments(context.Background(), bson.M{"post_id": postID, "value": 1})
+	if err != nil {
+		return 0, err
+	}
+	dislike, err := col.CountDocuments(context.Background(), bson.M{"post_id": postID, "value": -1})
+	if err != nil {
+		return 0, err
+	}
+	return like - dislike, nil
+}
+
+func GetReaction(postID primitive.ObjectID, userID primitive.ObjectID) (int, error) {
+	col := connection.GetDB().Reactions
+	res := col.FindOne(context.Background(), bson.M{"post_id": postID, "user_id": userID})
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return 0, nil
+		}
+		return 0, res.Err()
+	}
+	reaction := Reaction{}
+	err := res.Decode(&reaction)
+	if err != nil {
+		return 0, err
+	}
+	return reaction.Value, nil
+}
