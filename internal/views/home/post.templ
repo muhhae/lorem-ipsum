@@ -89,9 +89,9 @@ templ ReactSection(reactData ReactData) {
 	<div
 		class="react-section card-actions flex flex-col sm:flex-row w-full items-center justify-center mb-4"
 	>
-		@LikeButton(false, reactData.PostID)
+		@LikeButton(reactData.Value == 1, reactData.PostID)
 		@LikeCount(reactData.LikeCount, reactData.PostID)
-		@DislikeButton(false, reactData.PostID)
+		@DislikeButton(reactData.Value == -1, reactData.PostID)
 	</div>
 }
 

@@ -327,7 +327,7 @@ func ReactSection(reactData ReactData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = LikeButton(false, reactData.PostID).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = LikeButton(reactData.Value == 1, reactData.PostID).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -335,7 +335,7 @@ func ReactSection(reactData ReactData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = DislikeButton(false, reactData.PostID).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = DislikeButton(reactData.Value == -1, reactData.PostID).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
