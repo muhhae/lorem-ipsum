@@ -19,6 +19,8 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 func Init(e *echo.Echo) {
 	// e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.Gzip())
+
 	e.Validator = &CustomValidator{validator: validator.New()}
 
 	g := e.Group("/api/v1") // /api/v1
