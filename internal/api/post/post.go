@@ -93,21 +93,39 @@ func Default(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error retrieving posts")
 	}
 	postDatas := make([]home.PostData, len(posts))
-	for i, post := range posts {
-		owner, err := user.FindOne(bson.M{"_id": post.AuthorID})
+	for i, p := range posts {
+		owner, err := user.FindOne(bson.M{"_id": p.AuthorID})
 		if err != nil {
 			return c.String(http.StatusInternalServerError, "Error retrieving posts")
 		}
-		images := make([]string, len(post.ImageIDs))
-		for i, imgID := range post.ImageIDs {
+		images := make([]string, len(p.ImageIDs))
+		for i, imgID := range p.ImageIDs {
 			images[i] = fmt.Sprintf("/api/v1/image/%s", imgID.Hex())
+		}
+		likeCount, err := post.CountReaction(p.ID)
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Error retrieving posts")
+		}
+		userID := c.Get("id").(primitive.ObjectID)
+		var v int
+		if userID == primitive.NilObjectID {
+			v = 0
+		} else {
+			v, err = post.GetReaction(p.ID, c.Get("id").(primitive.ObjectID))
+			if err != nil {
+				return c.String(http.StatusInternalServerError, "Error retrieving posts")
+			}
 		}
 		postData := home.PostData{
 			Username:     owner.Username,
-			Content:      post.Content,
+			Content:      p.Content,
 			ImgSrc:       images,
-			LikeCount:    0,
 			CommentCount: 0,
+			ReactStruct: home.ReactData{
+				PostID:    p.ID.Hex(),
+				LikeCount: int(likeCount),
+				Value:     v,
+			},
 		}
 		postDatas[i] = postData
 	}
