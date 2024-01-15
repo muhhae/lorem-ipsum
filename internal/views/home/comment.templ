@@ -3,5 +3,85 @@ package home
 import "github.com/muhhae/lorem-ipsum/internal/database/comment"
 
 templ Comments(comments []comment.Comment) {
-    
+	for _, comment := range comments {
+		<div class="flex">
+			<div class="pt-2 divider divider-start divider-horizontal">
+				<div class="avatar">
+					<div class="w-12 rounded">
+						<img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"/>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="ml-3 py-2">
+					<div class="text-md">
+						{ comment.UserID.Hex() }
+					</div>
+					<div class="text-sm">
+						{ comment.Content }
+					</div>
+				</div>
+				{ children... }
+			</div>
+		</div>
+	}
+}
+
+templ CommentSection(postData PostData) {
+	<div
+		x-data="{ 
+					open: true,
+					showText: 'Hide',
+					toggle() {
+						this.open = !this.open;
+						if (this.open) {
+							this.showText = 'Hide';
+						} else {
+							this.showText = 'Show';
+						}
+					} 
+				}"
+	>
+		<div class="divider">
+			<button x-on:click="toggle()" class="btn btn-ghost"><span x-text="showText"></span> {  util.Format(postData.CommentCount) } Comments</button>
+		</div>
+		<div x-show="open">
+			@manyDummyComments()
+			@manyDummyComments()
+			@manyDummyComments()
+			@manyDummyComments()
+		</div>
+	</div>
+}
+
+templ manyDummyComments() {
+	@DummyComments() {
+		@DummyComments() {
+			@DummyComments() {
+			}
+		}
+	}
+}
+
+templ DummyComments() {
+	<div class="flex">
+		<div class="pt-2 divider divider-start divider-horizontal">
+			<div class="avatar">
+				<div class="w-12 rounded">
+					<img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"/>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="ml-3 py-2">
+				<div class="text-md">
+					Username
+				</div>
+				<div class="text-sm">
+					Content lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+				</div>
+			</div>
+			{ children... }
+		</div>
+	</div>
 }

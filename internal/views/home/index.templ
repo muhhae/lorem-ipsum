@@ -9,9 +9,9 @@ import "github.com/muhhae/lorem-ipsum/internal/views/shared"
 templ Index() {
 	@template.Base("Lorem Ipsum") {
 		@shared.NavBar()
-		<div class="p-2 md:p-10 md:pt-3">
-			@Form()
-			<div id="post-container" class="lg:w-2/5 w-full flex flex-col mx-auto">
+		<div class="p-2 md:p-10 md:pt-3 flex-col flex items-center">
+			<div id="post-container" class="lg:w-2/5 w-full flex flex-col">
+				@Form()
 				<div
 					id="loader"
 					hx-trigger="intersect"

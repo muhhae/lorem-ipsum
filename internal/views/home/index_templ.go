@@ -39,7 +39,7 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <div class=\"p-2 md:p-10 md:pt-3\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <div class=\"p-2 md:p-10 md:pt-3 flex-col flex items-center\"><div id=\"post-container\" class=\"lg:w-2/5 w-full flex flex-col\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -47,7 +47,7 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"post-container\" class=\"lg:w-2/5 w-full flex flex-col mx-auto\"><div id=\"loader\" hx-trigger=\"intersect\" hx-swap=\"outerHTML\" hx-get=\"/api/v1/post/Default?iteration=0\" class=\"loading loading-spinner loading-lg mx-auto\"></div></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-trigger=\"intersect\" hx-swap=\"outerHTML\" hx-get=\"/api/v1/post/Default?iteration=0\" class=\"loading loading-spinner loading-lg mx-auto\"></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
