@@ -1,8 +1,14 @@
 package home
 
-import "github.com/muhhae/lorem-ipsum/internal/database/comment"
+// import "github.com/muhhae/lorem-ipsum/internal/database/comment"
+import "github.com/muhhae/lorem-ipsum/internal/views/util"
 
-templ Comments(comments []comment.Comment) {
+type CommentData struct {
+	Content  string
+	Username string
+}
+
+templ Comments(comments []CommentData) {
 	for _, comment := range comments {
 		<div class="flex">
 			<div class="pt-2 divider divider-start divider-horizontal">
@@ -15,7 +21,7 @@ templ Comments(comments []comment.Comment) {
 			<div>
 				<div class="ml-3 py-2">
 					<div class="text-md">
-						{ comment.UserID.Hex() }
+						{ comment.Username }
 					</div>
 					<div class="text-sm">
 						{ comment.Content }
@@ -47,9 +53,6 @@ templ CommentSection(postData PostData) {
 		</div>
 		<div x-show="open">
 			@manyDummyComments()
-			@manyDummyComments()
-			@manyDummyComments()
-			@manyDummyComments()
 		</div>
 	</div>
 }
@@ -74,14 +77,34 @@ templ DummyComments() {
 		</div>
 		<div>
 			<div class="ml-3 py-2">
-				<div class="text-md">
+				<div class="text-md font-black">
 					Username
 				</div>
 				<div class="text-sm">
 					Content lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
 				</div>
 			</div>
-			{ children... }
+			<div
+				x-data="{ 
+					open: true,
+					showText: 'Hide',
+					toggle() {
+						this.open = !this.open;
+						if (this.open) {
+							this.showText = 'Hide';
+						} else {
+							this.showText = 'Show';
+						}
+					} 
+				}"
+			>
+				<div class="divider">
+					<button x-on:click="toggle()" class="btn btn-ghost"><span x-text="showText"></span> {  util.Format(0) } Comments</button>
+				</div>
+				<div x-show="open">
+					{ children... }
+				</div>
+			</div>
 		</div>
 	</div>
 }

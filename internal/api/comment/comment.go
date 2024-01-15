@@ -19,13 +19,13 @@ func SendComment(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid post id")
 	}
+	parentID, err := primitive.ObjectIDFromHex(c.QueryParam("replying"))
+	if err != nil || parentID == primitive.NilObjectID {
+		parentID = primitive.NilObjectID
+	}
 	content := c.FormValue("content")
 	if content == "" {
 		return c.String(http.StatusBadRequest, "Comment cannot be empty")
-	}
-	parentID, err := primitive.ObjectIDFromHex(c.FormValue("parent"))
-	if err != nil {
-		parentID = primitive.NilObjectID
 	}
 	comment := comment.Comment{
 		PostID:    postID,
@@ -55,4 +55,17 @@ func GetPostComment(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
 	return c.JSON(http.StatusOK, comments)
+}
+
+func GetReply(c echo.Context) error {
+	parentID, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid parent id")
+	}
+	comments, err := comment.FindAll(primitive.M{"parent": parentID})
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error getting comments")
+	}
+	return c.JSON(http.StatusOK, comments)
+
 }
