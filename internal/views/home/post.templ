@@ -74,6 +74,10 @@ templ ManyPost(postDatas []PostData, iteration int) {
 			<div class="divider">
 				<button class="btn btn-ghost">Show {  util.Format(postData.CommentCount) } Comments</button>
 			</div>
+			@manyDummyComments()
+			@manyDummyComments()
+			@manyDummyComments()
+			@manyDummyComments()
 		</div>
 	}
 	<div
@@ -83,6 +87,35 @@ templ ManyPost(postDatas []PostData, iteration int) {
 		hx-get={ postUrl(iteration + 1) }
 		class="loading loading-spinner loading-lg mx-auto"
 	></div>
+}
+
+templ manyDummyComments() {
+	@DummyComments(true) {
+		@DummyComments(false) {
+			@DummyComments(false) {
+				@DummyComments(false)
+			}
+		}
+	}
+}
+
+templ DummyComments(isRoot bool) {
+	<div class="flex">
+		if !isRoot {
+			<div class="pt-4 divider divider-start divider-horizontal"></div>
+		}
+		<div>
+			<div class="py-2">
+				<div class="mb-2 text-md">
+					Username
+				</div>
+				<div class="text-sm">
+					Content lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+				</div>
+			</div>
+			{ children... }
+		</div>
+	</div>
 }
 
 templ ReactSection(reactData ReactData) {
