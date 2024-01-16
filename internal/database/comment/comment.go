@@ -85,6 +85,29 @@ func RetrieveDefault(postID primitive.ObjectID, iteration int) ([]Comment, error
 	return comments, nil
 }
 
+func RetrieveAll(postID primitive.ObjectID) ([]Comment, error) {
+	var comments []Comment
+	col := connection.GetDB().Comments
+	filter := primitive.M{
+		"post_id": postID,
+		"parent":  primitive.NilObjectID,
+	}
+	cursor, err := col.Find(context.Background(), filter, &options.FindOptions{
+		Sort: bson.M{"created_at": -1},
+	})
+	if err != nil {
+		return nil, err
+	}
+	for cursor.Next(context.Background()) {
+		var comment Comment
+		if err := cursor.Decode(&comment); err != nil {
+			return nil, err
+		}
+		comments = append(comments, comment)
+	}
+	return comments, nil
+}
+
 func RetrieveUserComments(userID primitive.ObjectID, postID primitive.ObjectID) ([]Comment, error) {
 	var comments []Comment
 	col := connection.GetDB().Comments

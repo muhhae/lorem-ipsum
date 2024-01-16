@@ -2,11 +2,13 @@ package comment
 
 import (
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/muhhae/lorem-ipsum/internal/database/comment"
+	"github.com/muhhae/lorem-ipsum/internal/database/user"
+	"github.com/muhhae/lorem-ipsum/internal/views/home"
+	echotempl "github.com/muhhae/lorem-ipsum/pkg/echoTempl"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -46,15 +48,28 @@ func GetPostComment(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid post id")
 	}
-	iteration, err := strconv.Atoi(c.QueryParam("iteration"))
-	if err != nil {
-		iteration = 0
-	}
-	comments, err := comment.RetrieveDefault(postID, iteration)
+	comments, err := comment.RetrieveAll(postID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
-	return c.JSON(http.StatusOK, comments)
+	var commentDatas []home.CommentData
+	for _, comment := range comments {
+		user, err := user.FindOne(primitive.M{"_id": comment.UserID})
+		if err != nil || user.ID == primitive.NilObjectID {
+			continue
+		}
+		commentData := home.CommentData{
+			PostID:     postID.Hex(),
+			CommentID:  comment.ID.Hex(),
+			Content:    comment.Content,
+			Username:   user.Username,
+			ReplyCount: 0,
+		}
+		commentDatas = append(commentDatas, commentData)
+	}
+
+	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas))
+
 }
 
 func GetReply(c echo.Context) error {
@@ -66,6 +81,21 @@ func GetReply(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
-	return c.JSON(http.StatusOK, comments)
+	var commentDatas []home.CommentData
+	for _, comment := range comments {
+		user, err := user.FindOne(primitive.M{"_id": comment.UserID})
+		if err != nil || user.ID == primitive.NilObjectID {
+			continue
+		}
+		commentData := home.CommentData{
+			PostID:     comment.PostID.Hex(),
+			CommentID:  comment.ID.Hex(),
+			Content:    comment.Content,
+			Username:   user.Username,
+			ReplyCount: 0,
+		}
+		commentDatas = append(commentDatas, commentData)
+	}
 
+	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas))
 }

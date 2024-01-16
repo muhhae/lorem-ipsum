@@ -31,6 +31,7 @@ func Init(e *echo.Echo) {
 	InitPost(g)
 	InitImage(g)
 	initReaction(g)
+	initComment(g)
 }
 
 func InitPost(g *echo.Group) {
@@ -42,8 +43,9 @@ func InitPost(g *echo.Group) {
 func initComment(g *echo.Group) {
 	c := g.Group("/comment")
 	c.POST("/send/:id", comment.SendComment, Auth)
+	// api/v1/comment/send/:id?replying=replyID
 	c.GET("/post/:id", comment.GetPostComment)
-	// c.GET("/reply/:id", comment.GetReply)
+	c.GET("/reply/:id", comment.GetReply)
 }
 
 func initReaction(g *echo.Group) {

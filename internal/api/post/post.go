@@ -23,7 +23,9 @@ func Upload(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 	content := c.FormValue("content")
-	fmt.Println(content)
+	if content == "" {
+		return c.String(http.StatusBadRequest, "Post cannot be empty")
+	}
 	multipartForm, err := c.MultipartForm()
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid form")
@@ -117,6 +119,7 @@ func Default(c echo.Context) error {
 			}
 		}
 		postData := home.PostData{
+			PostID:       p.ID.Hex(),
 			Username:     owner.Username,
 			Content:      p.Content,
 			ImgSrc:       images,

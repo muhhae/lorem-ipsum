@@ -43,6 +43,7 @@ type ReactData struct {
 }
 
 type PostData struct {
+	PostID       string
 	Username     string
 	Content      string
 	ImgSrc       []string
@@ -69,7 +70,7 @@ templ ManyPost(postDatas []PostData, iteration int) {
 				{ postData.Content }
 			</div>
 			@ReactSection(postData.ReactStruct)
-			@CommentSection(postData)
+			@LoadCommentBtn(postData.PostID, postData.CommentCount)
 		</div>
 	}
 	<div
