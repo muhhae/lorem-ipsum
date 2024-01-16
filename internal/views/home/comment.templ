@@ -52,7 +52,65 @@ templ CommentSection(postData PostData) {
 			<button x-on:click="toggle()" class="btn btn-ghost"><span x-text="showText"></span> {  util.Format(postData.CommentCount) } Comments</button>
 		</div>
 		<div x-show="open">
-			@manyDummyComments()
+			<button class="btn btn-outline w-full text-xl">Add Comment</button>
+			@Comment(0)
+		</div>
+	</div>
+}
+
+templ Comment(i int) {
+	<div class="flex">
+		<div class="pt-2 divider divider-start divider-horizontal">
+			<div class="avatar">
+				<div class="w-12 rounded">
+					<img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"/>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="ml-3 py-2">
+				<div class="text-md font-black">
+					Username
+				</div>
+				<div class="text-sm">
+					Content lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+				</div>
+			</div>
+			if i < 4 {
+				<div
+					x-data="{ 
+					open: true,
+					showText: 'Hide',
+					toggle() {
+						this.open = !this.open;
+						if (this.open) {
+							this.showText = 'Hide';
+						} else {
+							this.showText = 'Show';
+						}
+					} 
+				}"
+				>
+					<div class="divider">
+						<button x-on:click="toggle()" class="btn btn-ghost"><span x-text="showText"></span> {  util.Format(0) } Comments</button>
+					</div>
+					<div x-show="open">
+						<div
+							x-data="{ 
+								open: false,
+								toggle() {
+									this.open = !this.open;
+								}
+							}"
+							class=""
+						>
+							<button x-on:click="toggle()" class="mb-2 btn btn-xs btn-outline w-full text-md">Reply</button>
+							<textarea x-show="open" class="textarea textarea-bordered w-full" rows="3" placeholder="Reply..."></textarea>
+						</div>
+						@Comment(i + 1)
+					</div>
+				</div>
+			}
 		</div>
 	</div>
 }
@@ -82,27 +140,6 @@ templ DummyComments() {
 				</div>
 				<div class="text-sm">
 					Content lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
-				</div>
-			</div>
-			<div
-				x-data="{ 
-					open: true,
-					showText: 'Hide',
-					toggle() {
-						this.open = !this.open;
-						if (this.open) {
-							this.showText = 'Hide';
-						} else {
-							this.showText = 'Show';
-						}
-					} 
-				}"
-			>
-				<div class="divider">
-					<button x-on:click="toggle()" class="btn btn-ghost"><span x-text="showText"></span> {  util.Format(0) } Comments</button>
-				</div>
-				<div x-show="open">
-					{ children... }
 				</div>
 			</div>
 		</div>
