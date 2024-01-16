@@ -27,6 +27,7 @@ templ CommentInput(url string) {
 			hx-swap="none"
 			class="w-full join join-vertical"
 			x-show="open"
+			x-on:htmx:after-request="$event.target.reset()"
 		>
 			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
 			<button type="submit" class="join-item mb-2 btn btn-outline w-full text-lg">Send</button>
@@ -127,9 +128,11 @@ templ LoadReplyBtn(postID string, commentID string, replyCount int) {
 }
 
 templ LoadedComment(comments []CommentData) {
-	for _, comment := range comments {
-		@Comment(comment)
-	}
+	<div>
+		for _, comment := range comments {
+			@Comment(comment)
+		}
+	</div>
 }
 
 templ Comment(c CommentData) {
