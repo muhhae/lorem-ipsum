@@ -52,7 +52,20 @@ templ CommentSection(postData PostData) {
 			<button x-on:click="toggle()" class="btn btn-ghost"><span x-text="showText"></span> {  util.Format(postData.CommentCount) } Comments</button>
 		</div>
 		<div x-show="open">
-			<button class="btn btn-outline w-full text-xl">Add Comment</button>
+			<div
+				x-data="{ 
+					open: false,
+					toggle() {
+						this.open = !this.open;
+					}
+				}"
+			>
+				<button x-on:click="toggle()" class="btn btn-outline w-full mb-4 text-xl">Add Comment</button>
+				<form class="w-full join join-vertical" x-show="open">
+					<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
+					<button type="submit" class="join-item mb-2 btn btn-outline w-full text-lg">Send</button>
+				</form>
+			</div>
 			@Comment(0)
 		</div>
 	</div>
@@ -105,7 +118,10 @@ templ Comment(i int) {
 							class=""
 						>
 							<button x-on:click="toggle()" class="mb-2 btn btn-xs btn-outline w-full text-md">Reply</button>
-							<textarea x-show="open" class="textarea textarea-bordered w-full" rows="3" placeholder="Reply..."></textarea>
+							<form class="w-full join join-vertical" x-show="open">
+								<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Reply..."></textarea>
+								<button type="submit" class="join-item mb-2 btn btn-xs btn-outline w-full text-md">Send</button>
+							</form>
 						</div>
 						@Comment(i + 1)
 					</div>
