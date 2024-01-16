@@ -1,3 +1,6 @@
+document.addEventListener('alpine:init', () => {
+    Alpine.store('postUploading', false)
+})
 document.addEventListener('DOMContentLoaded', () => {
     const maxFileSize = 1024 * 1024 * 5
     const maxFileCount = 8
@@ -33,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     postForm = document.getElementById('post-form')
     postForm.addEventListener('submit', async (e) => {
         e.preventDefault()
+        Alpine.store('postUploading', true)
         var formData = new FormData(e.target)
         if (Images.length <= 0) {
             alert('You must select at least one image')
@@ -76,9 +80,15 @@ function reactAndRefresh(e) {
         return
     }
     var elem = e.target
-    var parent = elem.parentElement
+    var parent = elem.closest('.react-section')
     var dislike = parent.querySelector('.dislike')
     var like = parent.querySelector('.like')
+
+    if (!like || !dislike) {
+        console.log("parent", parent)
+        console.log('like or dislike not found')
+        return
+    }
 
     var likeurl = like.getAttribute('hx-post')
     var dislikeurl = dislike.getAttribute('hx-post')

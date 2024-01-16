@@ -15,6 +15,7 @@ templ CommentInput(url string) {
 	<div
 		x-data="{ 
 			open: false,
+			loading: false,
 			toggle() {
 				this.open = !this.open;
 			}
@@ -27,10 +28,14 @@ templ CommentInput(url string) {
 			hx-swap="none"
 			class="w-full join join-vertical"
 			x-show="open"
-			x-on:htmx:after-request="$event.target.reset()"
+			x-on:htmx:before-request="loading = true"
+			x-on:htmx:after-request="$event.target.reset();loading = false;"
 		>
 			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
-			<button type="submit" class="join-item mb-2 btn btn-outline w-full text-lg">Send</button>
+			<div x-show="loading" class="join-item mb-2 btn btn-outline text-lg">
+				<span class="loading loading-lg loading-dots mx-auto "></span>
+			</div>
+			<button x-show="!loading" type="submit" class="join-item mb-2 btn btn-outline w-full text-lg">Send</button>
 		</form>
 	</div>
 }
@@ -39,6 +44,7 @@ templ ReplyInput(url string) {
 	<div
 		x-data="{ 
 			open: false,
+			loading: false,
 			toggle() {
 				this.open = !this.open;
 			}
@@ -50,9 +56,14 @@ templ ReplyInput(url string) {
 			hx-post={ url }
 			class="w-full join join-vertical"
 			x-show="open"
+			x-on:htmx:before-request="loading = true"
+			x-on:htmx:after-request="$event.target.reset();loading = false;"
 		>
 			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Reply..."></textarea>
-			<button type="submit" class="join-item mb-2 btn btn-xs btn-outline w-full text-md">Send</button>
+			<div x-show="loading" class="join-item mb-2 btn btn-outline btn-xs text-md">
+				<span class="loading loading-md loading-dots mx-auto "></span>
+			</div>
+			<button x-show="!loading" type="submit" class="join-item mb-2 btn btn-xs btn-outline w-full text-md">Send</button>
 		</form>
 	</div>
 }

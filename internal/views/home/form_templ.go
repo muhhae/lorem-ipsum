@@ -50,7 +50,7 @@ func Form() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <input id=\"images\" accept=\"image/jpeg, image/png, image/gif, image/bmp, image/webp\" type=\"file\" multiple class=\"file-input hidden file-input-bordered w-full\"></label></div><div class=\"flex-none form-control\"><button type=\"submit\" class=\"btn btn-primary text-lg\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <input id=\"images\" accept=\"image/jpeg, image/png, image/gif, image/bmp, image/webp\" type=\"file\" multiple class=\"file-input hidden file-input-bordered w-full\"></label></div><div class=\"flex-none form-control\"><div x-data=\"{ key: $store.postUploading }\" x-show=\"$store.postUploading\" class=\"btn btn-primary btn-disabled\"><span class=\"loading loading-lg\"></span></div><button x-data=\"{ key: $store.postUploading }\" x-show=\"!$store.postUploading\" type=\"submit\" class=\"btn btn-primary text-lg\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -68,7 +68,7 @@ func Form() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><template id=\"selected-file-template\"><div class=\"form-control flex flex-row join\"><a class=\"file-name flex-1 text-start btn btn-ghost rounded-md btn-xs join-item\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><template id=\"selected-file-template\"><div class=\"form-control flex flex-row join\"><a class=\"file-name flex-1 text-start btn btn-ghost rounded-md btn-xs join-item truncate\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
