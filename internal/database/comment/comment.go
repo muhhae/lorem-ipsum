@@ -131,3 +131,20 @@ func RetrieveUserComments(userID primitive.ObjectID, postID primitive.ObjectID) 
 	}
 	return comments, nil
 }
+
+func CommentCount(postID primitive.ObjectID) (int64, error) {
+	col := connection.GetDB().Comments
+	filter := primitive.M{
+		"post_id": postID,
+		"parent":  primitive.NilObjectID,
+	}
+	return col.CountDocuments(context.Background(), filter)
+}
+
+func ReplyCount(parentID primitive.ObjectID) (int64, error) {
+	col := connection.GetDB().Comments
+	filter := primitive.M{
+		"parent": parentID,
+	}
+	return col.CountDocuments(context.Background(), filter)
+}

@@ -53,17 +53,21 @@ func GetPostComment(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
 	var commentDatas []home.CommentData
-	for _, comment := range comments {
-		user, err := user.FindOne(primitive.M{"_id": comment.UserID})
+	for _, c := range comments {
+		user, err := user.FindOne(primitive.M{"_id": c.UserID})
 		if err != nil || user.ID == primitive.NilObjectID {
 			continue
 		}
+		replyCount, err := comment.ReplyCount(c.ID)
+		if err != nil {
+			replyCount = 0
+		}
 		commentData := home.CommentData{
 			PostID:     postID.Hex(),
-			CommentID:  comment.ID.Hex(),
-			Content:    comment.Content,
+			CommentID:  c.ID.Hex(),
+			Content:    c.Content,
 			Username:   user.Username,
-			ReplyCount: 0,
+			ReplyCount: int(replyCount),
 		}
 		commentDatas = append(commentDatas, commentData)
 	}
@@ -87,6 +91,7 @@ func GetReply(c echo.Context) error {
 		if err != nil || user.ID == primitive.NilObjectID {
 			continue
 		}
+
 		commentData := home.CommentData{
 			PostID:     comment.PostID.Hex(),
 			CommentID:  comment.ID.Hex(),
