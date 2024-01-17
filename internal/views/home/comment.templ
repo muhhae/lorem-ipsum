@@ -9,6 +9,7 @@ type CommentData struct {
 	Content    string
 	Username   string
 	ReplyCount int
+	Time       string
 }
 
 templ CommentInput(url string) {
@@ -83,6 +84,17 @@ templ LoadCommentBtn(postID string, commentCount int) {
 			} 
 		}"
 	>
+		<div x-show="open">
+			@commentLoader("/api/v1/comment/post/" + postID) {
+			}
+		</div>
+		<div class=" divider">
+			<button
+				class="btn btn-ghost"
+			>
+				Show 0 Comments
+			</button>
+		</div>
 		<div class=" divider">
 			<button
 				x-on:click="toggle()"
@@ -100,16 +112,17 @@ templ LoadCommentBtn(postID string, commentCount int) {
 		</div>
 		@CommentInput("/api/v1/comment/send/"+postID) {
 		}
-		<div x-show="open">
-			<div
-				id="loader"
-				hx-trigger="intersect"
-				hx-swap="outerHTML"
-				hx-get={ "/api/v1/comment/post/" + postID }
-				class="loading loading-dots loading-xs mx-auto"
-			></div>
-		</div>
 	</div>
+}
+
+templ commentLoader(url string) {
+	<div
+		id="loader"
+		hx-trigger="intersect"
+		hx-swap="outerHTML"
+		hx-get={ url }
+		class="loading loading-dots loading-xs mx-auto"
+	></div>
 }
 
 templ LoadReplyBtn(postID string, commentID string, replyCount int) {
@@ -158,10 +171,14 @@ templ LoadReplyBtn(postID string, commentID string, replyCount int) {
 	</div>
 }
 
-templ LoadedComment(comments []CommentData) {
+templ LoadedComment(comments []CommentData, comment bool) {
 	<div>
 		for _, comment := range comments {
 			@Comment(comment)
+		}
+		if comment && len(comments) > 0 {
+			@commentLoader("/api/v1/comment/post/" + comments[len(comments)-1].PostID + "?after=" + comments[len(comments)-1].CommentID) {
+			}
 		}
 	</div>
 }

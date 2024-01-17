@@ -49,7 +49,17 @@ func GetPostComment(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid post id")
 	}
-	comments, err := comment.RetrieveAll(postID)
+	var after primitive.ObjectID
+	afterP := c.QueryParam("after")
+	if afterP == "" {
+		after = primitive.NilObjectID
+	} else {
+		after, err = primitive.ObjectIDFromHex(afterP)
+		if err != nil {
+			return c.String(http.StatusBadRequest, "Invalid after id")
+		}
+	}
+	comments, err := comment.RetrieveAll(postID, primitive.NilObjectID, after)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
@@ -69,11 +79,15 @@ func GetPostComment(c echo.Context) error {
 			Content:    cm.Content,
 			Username:   user.Username,
 			ReplyCount: int(replyCount),
+			Time:       cm.CreatedAt.Format(time.RFC3339),
 		}
 		commentDatas = append(commentDatas, commentData)
 	}
+	if len(commentDatas) == 0 {
+		return c.String(http.StatusNotFound, "No comments found")
+	}
 
-	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas))
+	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas, true))
 
 }
 
@@ -82,7 +96,7 @@ func GetReply(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid parent id")
 	}
-	comments, err := comment.FindAll(primitive.M{"parent": parentID})
+	comments, err := comment.RetrieveAll(primitive.NilObjectID, parentID, primitive.NilObjectID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
@@ -106,7 +120,7 @@ func GetReply(c echo.Context) error {
 		commentDatas = append(commentDatas, commentData)
 	}
 
-	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas))
+	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas, false))
 }
 
 func GetCommentCount(c echo.Context) error {

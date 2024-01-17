@@ -85,15 +85,46 @@ func RetrieveDefault(postID primitive.ObjectID, iteration int) ([]Comment, error
 	return comments, nil
 }
 
-func RetrieveAll(postID primitive.ObjectID) ([]Comment, error) {
+func RetrieveAll(postID primitive.ObjectID, parentID primitive.ObjectID, afterID primitive.ObjectID) ([]Comment, error) {
 	var comments []Comment
 	col := connection.GetDB().Comments
-	filter := primitive.M{
-		"post_id": postID,
-		"parent":  primitive.NilObjectID,
+	after := time.Unix(0, 0)
+	if afterID != primitive.NilObjectID {
+		com := Comment{}
+		if err := col.FindOne(context.Background(), primitive.M{"_id": afterID}).Decode(&com); err != nil {
+			return nil, err
+		}
+		after = com.CreatedAt
 	}
+	filter := primitive.M{
+		"$and": []interface{}{
+			bson.M{
+				"$or": []interface{}{
+					bson.M{
+						"created_at": bson.M{"$gt": after},
+					},
+					bson.M{
+						"created_at": after,
+						"_id": bson.M{
+							"$gt": parentID,
+						},
+					},
+				},
+			},
+			bson.M{
+				"_id": bson.M{"$ne": afterID},
+			},
+		},
+		"post_id": postID,
+		"parent":  parentID,
+	}
+	if parentID != primitive.NilObjectID {
+		delete(filter, "post_id")
+	}
+	limit := int64(maxComments)
 	cursor, err := col.Find(context.Background(), filter, &options.FindOptions{
-		Sort: bson.M{"created_at": -1},
+		Sort:  bson.M{"created_at": 1},
+		Limit: &limit,
 	})
 	if err != nil {
 		return nil, err
