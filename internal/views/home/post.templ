@@ -91,11 +91,11 @@ templ ReactSection(reactData ReactData) {
 			afterRequest: function() {
 				this.inRequest = false;
 				this.loading = false;
-				clearTimeout(timeout);
+				clearTimeout(this.timeout);
 			},
 			beforeRequest: function() {
 				this.inRequest = true;
-				timeout = setTimeout(() => {
+				this.timeout = setTimeout(() => {
 					this.loading = this.inRequest;
 				}, 300);
 			},

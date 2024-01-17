@@ -29,7 +29,7 @@ templ CommentInput(url string) {
 			class="w-full join join-vertical"
 			x-show="open"
 			x-on:htmx:before-request="loading = true"
-			x-on:htmx:after-request="$event.target.reset();loading = false;"
+			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.commentCount, 'update');"
 		>
 			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
 			<div x-show="loading" class="join-item mb-2 btn btn-outline text-lg">
@@ -57,7 +57,7 @@ templ ReplyInput(url string) {
 			class="w-full join join-vertical"
 			x-show="open"
 			x-on:htmx:before-request="loading = true"
-			x-on:htmx:after-request="$event.target.reset();loading = false;"
+			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.replyCount, 'update');"
 		>
 			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Reply..."></textarea>
 			<div x-show="loading" class="join-item mb-2 btn btn-outline btn-xs text-md">
@@ -87,7 +87,16 @@ templ LoadCommentBtn(postID string, commentCount int) {
 			<button
 				x-on:click="toggle()"
 				class="btn btn-ghost"
-			><span x-text="showText"></span> {  util.Format(commentCount) } Comments</button>
+			>
+				<span x-text="showText"></span>
+				<span
+					hx-get={ "api/v1/comment/count/" + postID }
+					hx-swap="innerHTML"
+					hx-trigger="update"
+					x-ref="commentCount"
+					x-init="periodicIntersectUpdateObserver.observe($el)"
+				>{  util.Format(commentCount) }</span> Comments
+			</button>
 		</div>
 		@CommentInput("/api/v1/comment/send/"+postID) {
 		}
@@ -122,7 +131,18 @@ templ LoadReplyBtn(postID string, commentID string, replyCount int) {
 			<button
 				x-on:click="toggle()"
 				class="btn btn-xs text-sm btn-ghost"
-			><span x-text="showText"></span> {  util.Format(replyCount) } Replies</button>
+			>
+				<span x-text="showText"></span>
+				<span
+					hx-get={ "api/v1/comment/reply-count/" + commentID }
+					hx-swap="innerHTML"
+					hx-trigger="update"
+					x-ref="replyCount"
+					x-init="periodicIntersectUpdateObserver.observe($el)"
+				>
+					{  util.Format(replyCount) }
+				</span> Replies
+			</button>
 		</div>
 		@ReplyInput("/api/v1/comment/send/"+postID+"?replying=" + commentID) {
 		}

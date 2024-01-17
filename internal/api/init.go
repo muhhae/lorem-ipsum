@@ -46,6 +46,8 @@ func initComment(g *echo.Group) {
 	// api/v1/comment/send/:id?replying=replyID
 	c.GET("/post/:id", comment.GetPostComment)
 	c.GET("/reply/:id", comment.GetReply)
+	c.GET("/count/:id", comment.GetCommentCount)
+	c.GET("/reply-count/:id", comment.GetReplyCount)
 }
 
 func initReaction(g *echo.Group) {

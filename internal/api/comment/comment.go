@@ -8,6 +8,7 @@ import (
 	"github.com/muhhae/lorem-ipsum/internal/database/comment"
 	"github.com/muhhae/lorem-ipsum/internal/database/user"
 	"github.com/muhhae/lorem-ipsum/internal/views/home"
+	"github.com/muhhae/lorem-ipsum/internal/views/util"
 	echotempl "github.com/muhhae/lorem-ipsum/pkg/echoTempl"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -53,19 +54,19 @@ func GetPostComment(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
 	var commentDatas []home.CommentData
-	for _, c := range comments {
-		user, err := user.FindOne(primitive.M{"_id": c.UserID})
+	for _, cm := range comments {
+		user, err := user.FindOne(primitive.M{"_id": cm.UserID})
 		if err != nil || user.ID == primitive.NilObjectID {
 			continue
 		}
-		replyCount, err := comment.ReplyCount(c.ID)
+		replyCount, err := comment.ReplyCount(cm.ID)
 		if err != nil {
 			replyCount = 0
 		}
 		commentData := home.CommentData{
 			PostID:     postID.Hex(),
-			CommentID:  c.ID.Hex(),
-			Content:    c.Content,
+			CommentID:  cm.ID.Hex(),
+			Content:    cm.Content,
 			Username:   user.Username,
 			ReplyCount: int(replyCount),
 		}
@@ -86,21 +87,48 @@ func GetReply(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
 	var commentDatas []home.CommentData
-	for _, comment := range comments {
-		user, err := user.FindOne(primitive.M{"_id": comment.UserID})
+	for _, cm := range comments {
+		user, err := user.FindOne(primitive.M{"_id": cm.UserID})
 		if err != nil || user.ID == primitive.NilObjectID {
 			continue
 		}
-
+		replyCount, err := comment.ReplyCount(cm.ID)
+		if err != nil {
+			replyCount = 0
+		}
 		commentData := home.CommentData{
-			PostID:     comment.PostID.Hex(),
-			CommentID:  comment.ID.Hex(),
-			Content:    comment.Content,
+			PostID:     cm.PostID.Hex(),
+			CommentID:  cm.ID.Hex(),
+			Content:    cm.Content,
 			Username:   user.Username,
-			ReplyCount: 0,
+			ReplyCount: int(replyCount),
 		}
 		commentDatas = append(commentDatas, commentData)
 	}
 
 	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas))
+}
+
+func GetCommentCount(c echo.Context) error {
+	postID, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid post id")
+	}
+	count, err := comment.CommentCount(postID)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error getting comment count")
+	}
+	return c.String(200, util.Format(int(count)))
+}
+
+func GetReplyCount(c echo.Context) error {
+	parentID, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid parent id")
+	}
+	count, err := comment.ReplyCount(parentID)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error getting reply count")
+	}
+	return c.String(200, util.Format(int(count)))
 }

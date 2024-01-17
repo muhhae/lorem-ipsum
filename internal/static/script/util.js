@@ -1,6 +1,19 @@
 document.addEventListener('alpine:init', () => {
     Alpine.store('postUploading', false)
 })
+
+var periodicIntersectUpdateObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.intervalID = setInterval(() => {
+                htmx.trigger(entry.target, 'update')
+            }, 30000)
+        } else {
+            clearInterval(entry.target.intervalID)
+        }
+    })
+})
+
 document.addEventListener('DOMContentLoaded', () => {
     const maxFileSize = 1024 * 1024 * 5
     const maxFileCount = 8
@@ -126,10 +139,4 @@ function reactAndRefresh(e) {
     htmx.trigger(likeCount, 'update')
 
 
-}
-
-function urlProc(url) {
-
-
-    return url
 }

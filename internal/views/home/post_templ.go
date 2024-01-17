@@ -301,7 +301,7 @@ func ReactSection(reactData ReactData) templ.Component {
 			templ_7745c5c3_Var19 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n			loading: false,\n			timeout: null,\n			inRequest: false,\n			afterRequest: function() {\n				this.inRequest = false;\n				this.loading = false;\n				clearTimeout(timeout);\n			},\n			beforeRequest: function() {\n				this.inRequest = true;\n				timeout = setTimeout(() =&gt; {\n					this.loading = this.inRequest;\n				}, 300);\n			},\n		}\" class=\"react-section card-actions flex flex-col sm:flex-row w-full items-center justify-center my-4\"><span x-show=\"!loading\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n			loading: false,\n			timeout: null,\n			inRequest: false,\n			afterRequest: function() {\n				this.inRequest = false;\n				this.loading = false;\n				clearTimeout(this.timeout);\n			},\n			beforeRequest: function() {\n				this.inRequest = true;\n				this.timeout = setTimeout(() =&gt; {\n					this.loading = this.inRequest;\n				}, 300);\n			},\n		}\" class=\"react-section card-actions flex flex-col sm:flex-row w-full items-center justify-center my-4\"><span x-show=\"!loading\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
