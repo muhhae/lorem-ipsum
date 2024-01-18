@@ -1,6 +1,6 @@
 module github.com/muhhae/lorem-ipsum
 
-go 1.21.3
+go 1.21.5
 
 require (
 	github.com/a-h/templ v0.2.513

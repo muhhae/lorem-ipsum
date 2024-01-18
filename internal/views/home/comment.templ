@@ -1,0 +1,178 @@
+package home
+
+// import "github.com/muhhae/lorem-ipsum/internal/database/comment"
+import "github.com/muhhae/lorem-ipsum/internal/views/util"
+import "strings"
+import "net/url"
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
+// import "fmt"
+
+type CommentData struct {
+	PostID     string
+	CommentID  string
+	ParentID   string
+	Content    string
+	Username   string
+	ReplyCount int
+}
+
+templ LoadedComment(comments []CommentData) {
+	<div>
+		for _, comment := range comments {
+			@Comment(comment)
+		}
+		if len(comments) > 0 {
+			@commentLoader(nextLoaderURL(comments[len(comments)-1])) {
+			}
+		}
+	</div>
+}
+
+templ Comment(c CommentData) {
+	<div class="flex">
+		<div class="pt-2 divider divider-start divider-horizontal">
+			<div class="avatar placeholder">
+				<div class="bg-accent text-2xl text-accent-content rounded-full w-12">
+					<span>{ strings.ToUpper(string([]rune(c.Username)[0])) }</span>
+				</div>
+			</div>
+		</div>
+		<div class="w-full ml-3 py-2">
+			<div class="text-md font-black">
+				{ c.Username }
+			</div>
+			<div class="text-sm">
+				{ c.Content }
+			</div>
+			@LoadCommentBtn(c) {
+			}
+		</div>
+	</div>
+}
+
+templ CommentInput(url string, reply bool) {
+	<div
+		x-data="{ 
+			open: false,
+			loading: false,
+			toggle() {
+				this.open = !this.open;
+			}
+		}"
+	>
+		if reply {
+			<button x-on:click="toggle()" class="btn btn-xs btn-outline w-full mb-4 text-sm">Reply</button>
+		} else {
+			<button x-on:click="toggle()" class="btn btn-outline w-full my-4 text-xl">Add Comment</button>
+		}
+		<form
+			hx-post={ url }
+			hx-swap="none"
+			class="w-full join join-vertical"
+			x-show="open"
+			x-on:htmx:before-request="loading = true"
+			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.commentCount, 'update');htmx.trigger($refs.loader, 'update');"
+		>
+			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
+			<div x-show="loading" class="join-item btn btn-outline text-lg">
+				<span class="loading loading-lg loading-dots mx-auto "></span>
+			</div>
+			if reply {
+				<button x-show="!loading" type="submit" class="join-item btn btn-outline btn-xs w-full text-sm">Send</button>
+			} else {
+				<button x-show="!loading" type="submit" class="join-item mb-2 btn btn-outline w-full text-lg">Send</button>
+			}
+		</form>
+	</div>
+}
+
+func showBtnClass(c CommentData) string {
+	if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
+		return "btn btn-ghost btn-xs"
+	} else {
+		return "btn btn-ghost"
+	}
+}
+
+templ LoadCommentBtn(c CommentData) {
+	<div
+		x-data="{ 
+			open: false,
+			showText: 'Show',
+			toggle() {
+				this.open = !this.open;
+				if (this.open) {
+					this.showText = 'Hide';
+				} else {
+					this.showText = 'Show';
+				}
+			} 
+		}"
+	>
+		<div class=" divider">
+			<button
+				x-on:click="toggle()"
+				class={ showBtnClass(c) }
+			>
+				<span x-text="showText"></span>
+				<span
+					hx-get={ commentCountURL(c) }
+					hx-swap="innerHTML"
+					hx-trigger="update, intersect"
+					x-ref="commentCount"
+					x-init="periodicIntersectUpdateObserver.observe($el)"
+				>{  util.Format(c.ReplyCount) }</span>
+				if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
+					<span>Replies</span>
+				} else {
+					<span>Comments</span>
+				}
+			</button>
+		</div>
+		@CommentInput(commentInputURL(c), c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex()) {
+		}
+		<div x-show="open">
+			@commentLoader(loaderURL(c)) {
+			}
+		</div>
+	</div>
+}
+
+templ commentLoader(url string) {
+	<div
+		id="loader"
+		hx-trigger="intersect, update"
+		x-ref="loader"
+		x-init="periodicIntersectUpdateObserver.observe($el)"
+		hx-swap="outerHTML"
+		hx-get={ url }
+		hx-on:response-error="console.log('error', event.detail)"
+	></div>
+}
+
+func commentCountURL(c CommentData) string {
+	params := url.Values{}
+	params.Add("parent", c.CommentID)
+	return "/api/v1/comment/count/" + c.PostID + "?" + params.Encode()
+}
+
+func commentInputURL(c CommentData) string {
+	params := url.Values{}
+	params.Add("replying", c.CommentID)
+	return "/api/v1/comment/send/" + c.PostID + "?" + params.Encode()
+}
+func loaderURL(comment CommentData) string {
+	params := url.Values{}
+	params.Add("parent", comment.CommentID)
+	return "/api/v1/comment/get/" + comment.PostID + "?" + params.Encode()
+}
+
+func nextLoaderURL(comment CommentData) string {
+	// fmt.Println(comment)
+	params := url.Values{}
+	params.Add("parent", comment.ParentID)
+	params.Add("after", comment.CommentID)
+	// fmt.Println(params.Encode())
+	return "/api/v1/comment/get/" + comment.PostID + "?" + params.Encode()
+}

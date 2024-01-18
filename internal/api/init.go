@@ -4,6 +4,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/muhhae/lorem-ipsum/internal/api/comment"
 	"github.com/muhhae/lorem-ipsum/internal/api/post"
 	"github.com/muhhae/lorem-ipsum/internal/api/user"
 )
@@ -19,6 +20,8 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 func Init(e *echo.Echo) {
 	// e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.Gzip())
+
 	e.Validator = &CustomValidator{validator: validator.New()}
 
 	g := e.Group("/api/v1") // /api/v1
@@ -28,12 +31,20 @@ func Init(e *echo.Echo) {
 	InitPost(g)
 	InitImage(g)
 	initReaction(g)
+	initComment(g)
 }
 
 func InitPost(g *echo.Group) {
 	p := g.Group("/post")
 	p.POST("/upload", post.Upload, Auth)
 	p.GET("/Default", post.Default, SoftAuth)
+}
+
+func initComment(g *echo.Group) {
+	c := g.Group("/comment")
+	c.POST("/send/:id", comment.SendComment, Auth)
+	c.GET("/get/:id", comment.GetComment)
+	c.GET("/count/:id", comment.GetCommentCount)
 }
 
 func initReaction(g *echo.Group) {

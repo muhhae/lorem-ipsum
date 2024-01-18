@@ -8,7 +8,9 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	comment "github.com/muhhae/lorem-ipsum/internal/database/comment"
 	imagemodel "github.com/muhhae/lorem-ipsum/internal/database/image"
+
 	"github.com/muhhae/lorem-ipsum/internal/database/post"
 	"github.com/muhhae/lorem-ipsum/internal/database/user"
 	"github.com/muhhae/lorem-ipsum/internal/views/home"
@@ -23,7 +25,9 @@ func Upload(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 	content := c.FormValue("content")
-	fmt.Println(content)
+	if content == "" {
+		return c.String(http.StatusBadRequest, "Post cannot be empty")
+	}
 	multipartForm, err := c.MultipartForm()
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid form")
@@ -116,11 +120,16 @@ func Default(c echo.Context) error {
 				return c.String(http.StatusInternalServerError, "Error retrieving posts")
 			}
 		}
+		commentCount, err := comment.CommentCount(p.ID)
+		if err != nil {
+			commentCount = 0
+		}
 		postData := home.PostData{
+			PostID:       p.ID.Hex(),
 			Username:     owner.Username,
 			Content:      p.Content,
 			ImgSrc:       images,
-			CommentCount: 0,
+			CommentCount: int(commentCount),
 			ReactStruct: home.ReactData{
 				PostID:    p.ID.Hex(),
 				LikeCount: int(likeCount),

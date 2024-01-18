@@ -3,8 +3,7 @@ package home
 templ Form() {
 	<form
 		id="post-form"
-		class="lg:w-2/5 text-xl mx-auto card-body"
-		
+		class="text-xl card-body"
 	>
 		<div class="form-control">
 			<label for="content" class="label">
@@ -37,14 +36,19 @@ templ Form() {
 				</label>
 			</div>
 			<div class="flex-none form-control">
-				<button type="submit" class="btn btn-primary text-lg">Post</button>
+				<div x-data="{ key: $store.postUploading }" x-show="$store.postUploading" class="btn btn-primary btn-disabled">
+					<span class="loading loading-lg"></span>
+				</div>
+				<button x-data="{ key: $store.postUploading }" x-show="!$store.postUploading" type="submit" class="btn btn-primary text-lg">
+					Post
+				</button>
 			</div>
 		</div>
 		<div id="selected-images"></div>
 		<script src="/api/v1/static/script/util.js"></script>
 		<template id="selected-file-template">
 			<div class="form-control flex flex-row join">
-				<a class="file-name flex-1 text-start btn btn-ghost rounded-md btn-xs join-item">Lorem Ipsum</a>
+				<a class="file-name flex-1 text-start btn btn-ghost rounded-md btn-xs join-item truncate">Lorem Ipsum</a>
 				<button class="remove-button flex-0 btn btn-xs hover:bg-red-300 bg-red-500 rounded-md join-item">
 					<svg class="h-full object-cover" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M5 5L19 19M5 19L19 5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
 				</button>
