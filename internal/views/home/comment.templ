@@ -120,7 +120,7 @@ templ LoadCommentBtn(c CommentData) {
 				<span
 					hx-get={ commentCountURL(c) }
 					hx-swap="innerHTML"
-					hx-trigger="update"
+					hx-trigger="update, intersect"
 					x-ref="commentCount"
 					x-init="periodicIntersectUpdateObserver.observe($el)"
 				>{  util.Format(c.ReplyCount) }</span>
@@ -131,6 +131,8 @@ templ LoadCommentBtn(c CommentData) {
 				}
 			</button>
 		</div>
+		@CommentInput(commentInputURL(c), c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex()) {
+		}
 		<div x-show="open">
 			@commentLoader(loaderURL(c)) {
 			}
@@ -142,8 +144,6 @@ templ LoadCommentBtn(c CommentData) {
 		// 		Show 0 Comments
 		// 	</button>
 		// </div>
-		@CommentInput(commentInputURL(c), c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex()) {
-		}
 	</div>
 }
 

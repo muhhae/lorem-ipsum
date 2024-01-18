@@ -101,10 +101,10 @@ func GetCommentCount(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Invalid post id")
 	}
 	parentID, err := primitive.ObjectIDFromHex(c.QueryParam("parent"))
-	if err != nil || parentID == primitive.NilObjectID {
+	if err != nil {
 		parentID = primitive.NilObjectID
 	}
-	if parentID != primitive.NilObjectID {
+	if parentID == primitive.NilObjectID {
 		count, err := comment.CommentCount(postID)
 		if err != nil {
 			return c.String(http.StatusInternalServerError, "Error getting comment count")
