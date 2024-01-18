@@ -2,182 +2,28 @@ package home
 
 // import "github.com/muhhae/lorem-ipsum/internal/database/comment"
 import "github.com/muhhae/lorem-ipsum/internal/views/util"
+import "strings"
+import "net/url"
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
+// import "fmt"
 
 type CommentData struct {
 	PostID     string
 	CommentID  string
+	ParentID   string
 	Content    string
 	Username   string
 	ReplyCount int
-	Time       string
 }
 
-templ CommentInput(url string) {
-	<div
-		x-data="{ 
-			open: false,
-			loading: false,
-			toggle() {
-				this.open = !this.open;
-			}
-		}"
-		class="mt-4"
-	>
-		<button x-on:click="toggle()" class="btn btn-outline w-full my-4 text-xl">Add Comment</button>
-		<form
-			hx-post={ url }
-			hx-swap="none"
-			class="w-full join join-vertical"
-			x-show="open"
-			x-on:htmx:before-request="loading = true"
-			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.commentCount, 'update');"
-		>
-			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
-			<div x-show="loading" class="join-item mb-2 btn btn-outline text-lg">
-				<span class="loading loading-lg loading-dots mx-auto "></span>
-			</div>
-			<button x-show="!loading" type="submit" class="join-item mb-2 btn btn-outline w-full text-lg">Send</button>
-		</form>
-	</div>
-}
-
-templ ReplyInput(url string) {
-	<div
-		x-data="{ 
-			open: false,
-			loading: false,
-			toggle() {
-				this.open = !this.open;
-			}
-		}"
-	>
-		<button x-on:click="toggle()" class="mb-2 btn btn-xs btn-outline w-full text-md">Reply</button>
-		<form
-			hx-swap="none"
-			hx-post={ url }
-			class="w-full join join-vertical"
-			x-show="open"
-			x-on:htmx:before-request="loading = true"
-			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.replyCount, 'update');"
-		>
-			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Reply..."></textarea>
-			<div x-show="loading" class="join-item mb-2 btn btn-outline btn-xs text-md">
-				<span class="loading loading-md loading-dots mx-auto "></span>
-			</div>
-			<button x-show="!loading" type="submit" class="join-item mb-2 btn btn-xs btn-outline w-full text-md">Send</button>
-		</form>
-	</div>
-}
-
-templ LoadCommentBtn(postID string, commentCount int) {
-	<div
-		x-data="{ 
-			open: false,
-			showText: 'Show',
-			toggle() {
-				this.open = !this.open;
-				if (this.open) {
-					this.showText = 'Hide';
-				} else {
-					this.showText = 'Show';
-				}
-			} 
-		}"
-	>
-		<div x-show="open">
-			@commentLoader("/api/v1/comment/post/" + postID) {
-			}
-		</div>
-		<div class=" divider">
-			<button
-				class="btn btn-ghost"
-			>
-				Show 0 Comments
-			</button>
-		</div>
-		<div class=" divider">
-			<button
-				x-on:click="toggle()"
-				class="btn btn-ghost"
-			>
-				<span x-text="showText"></span>
-				<span
-					hx-get={ "api/v1/comment/count/" + postID }
-					hx-swap="innerHTML"
-					hx-trigger="update"
-					x-ref="commentCount"
-					x-init="periodicIntersectUpdateObserver.observe($el)"
-				>{  util.Format(commentCount) }</span> Comments
-			</button>
-		</div>
-		@CommentInput("/api/v1/comment/send/"+postID) {
-		}
-	</div>
-}
-
-templ commentLoader(url string) {
-	<div
-		id="loader"
-		hx-trigger="intersect"
-		hx-swap="outerHTML"
-		hx-get={ url }
-		class="loading loading-dots loading-xs mx-auto"
-	></div>
-}
-
-templ LoadReplyBtn(postID string, commentID string, replyCount int) {
-	<div
-		x-data="{ 
-			open: false,
-			showText: 'Show',
-			toggle() {
-				this.open = !this.open;
-				if (this.open) {
-					this.showText = 'Hide';
-				} else {
-					this.showText = 'Show';
-				}
-			} 
-		}"
-	>
-		<div class=" divider">
-			<button
-				x-on:click="toggle()"
-				class="btn btn-xs text-sm btn-ghost"
-			>
-				<span x-text="showText"></span>
-				<span
-					hx-get={ "api/v1/comment/reply-count/" + commentID }
-					hx-swap="innerHTML"
-					hx-trigger="update"
-					x-ref="replyCount"
-					x-init="periodicIntersectUpdateObserver.observe($el)"
-				>
-					{  util.Format(replyCount) }
-				</span> Replies
-			</button>
-		</div>
-		@ReplyInput("/api/v1/comment/send/"+postID+"?replying=" + commentID) {
-		}
-		<div x-show="open">
-			<div
-				id="loader"
-				hx-trigger="intersect"
-				hx-swap="outerHTML"
-				hx-get={ "/api/v1/comment/reply/" + commentID }
-				class="loading loading-dots loading-xs mx-auto"
-			></div>
-		</div>
-	</div>
-}
-
-templ LoadedComment(comments []CommentData, comment bool) {
+templ LoadedComment(comments []CommentData) {
 	<div>
 		for _, comment := range comments {
 			@Comment(comment)
 		}
-		if comment && len(comments) > 0 {
-			@commentLoader("/api/v1/comment/post/" + comments[len(comments)-1].PostID + "?after=" + comments[len(comments)-1].CommentID) {
+		if len(comments) > 0 {
+			@commentLoader(nextLoaderURL(comments[len(comments)-1])) {
 			}
 		}
 	</div>
@@ -186,9 +32,9 @@ templ LoadedComment(comments []CommentData, comment bool) {
 templ Comment(c CommentData) {
 	<div class="flex">
 		<div class="pt-2 divider divider-start divider-horizontal">
-			<div class="avatar">
-				<div class="w-12 rounded">
-					<img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"/>
+			<div class="avatar placeholder">
+				<div class="bg-accent text-2xl text-accent-content rounded-full w-12">
+					<span>{ strings.ToUpper(string([]rune(c.Username)[0])) }</span>
 				</div>
 			</div>
 		</div>
@@ -199,8 +45,140 @@ templ Comment(c CommentData) {
 			<div class="text-sm">
 				{ c.Content }
 			</div>
-			@LoadReplyBtn(c.PostID, c.CommentID, c.ReplyCount) {
+			@LoadCommentBtn(c) {
 			}
 		</div>
 	</div>
+}
+
+templ CommentInput(url string, reply bool) {
+	<div
+		x-data="{ 
+			open: false,
+			loading: false,
+			toggle() {
+				this.open = !this.open;
+			}
+		}"
+		class=""
+	>
+		if reply {
+			<button x-on:click="toggle()" class="btn btn-xs btn-outline w-full my-4 text-sm">Reply</button>
+		} else {
+			<button x-on:click="toggle()" class="btn btn-outline w-full my-4 text-xl">Add Comment</button>
+		}
+		<form
+			hx-post={ url }
+			hx-swap="none"
+			class="w-full join join-vertical"
+			x-show="open"
+			x-on:htmx:before-request="loading = true"
+			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.commentCount, 'update');"
+		>
+			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
+			<div x-show="loading" class="join-item btn btn-outline text-lg">
+				<span class="loading loading-lg loading-dots mx-auto "></span>
+			</div>
+			if reply {
+				<button x-show="!loading" type="submit" class="join-item btn btn-outline btn-xs w-full text-sm">Send</button>
+			} else {
+				<button x-show="!loading" type="submit" class="join-item mb-2 btn btn-outline w-full text-lg">Send</button>
+			}
+		</form>
+	</div>
+}
+
+func showBtnClass(c CommentData) string {
+	if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
+		return "btn btn-ghost btn-xs"
+	} else {
+		return "btn btn-ghost"
+	}
+}
+
+templ LoadCommentBtn(c CommentData) {
+	<div
+		x-data="{ 
+			open: false,
+			showText: 'Show',
+			toggle() {
+				this.open = !this.open;
+				if (this.open) {
+					this.showText = 'Hide';
+				} else {
+					this.showText = 'Show';
+				}
+			} 
+		}"
+	>
+		<div class=" divider">
+			<button
+				x-on:click="toggle()"
+				class={ showBtnClass(c) }
+			>
+				<span x-text="showText"></span>
+				<span
+					hx-get={ commentCountURL(c) }
+					hx-swap="innerHTML"
+					hx-trigger="update"
+					x-ref="commentCount"
+					x-init="periodicIntersectUpdateObserver.observe($el)"
+				>{  util.Format(c.ReplyCount) }</span>
+				if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
+					<span>Replies</span>
+				} else {
+					<span>Comments</span>
+				}
+			</button>
+		</div>
+		<div x-show="open">
+			@commentLoader(loaderURL(c)) {
+			}
+		</div>
+		// <div class=" divider">
+		// 	<button
+		// 		class="btn btn-ghost"
+		// 	>
+		// 		Show 0 Comments
+		// 	</button>
+		// </div>
+		@CommentInput(commentInputURL(c), c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex()) {
+		}
+	</div>
+}
+
+templ commentLoader(url string) {
+	<div
+		id="loader"
+		hx-trigger="intersect"
+		hx-swap="outerHTML"
+		hx-get={ url }
+		hx-on:response-error="console.log('error', event.detail)"
+	></div>
+}
+
+func commentCountURL(c CommentData) string {
+	params := url.Values{}
+	params.Add("parent", c.CommentID)
+	return "/api/v1/comment/count/" + c.PostID + "?" + params.Encode()
+}
+
+func commentInputURL(c CommentData) string {
+	params := url.Values{}
+	params.Add("replying", c.CommentID)
+	return "/api/v1/comment/send/" + c.PostID + "?" + params.Encode()
+}
+func loaderURL(comment CommentData) string {
+	params := url.Values{}
+	params.Add("parent", comment.CommentID)
+	return "/api/v1/comment/get/" + comment.PostID + "?" + params.Encode()
+}
+
+func nextLoaderURL(comment CommentData) string {
+	// fmt.Println(comment)
+	params := url.Values{}
+	params.Add("parent", comment.ParentID)
+	params.Add("after", comment.CommentID)
+	// fmt.Println(params.Encode())
+	return "/api/v1/comment/get/" + comment.PostID + "?" + params.Encode()
 }

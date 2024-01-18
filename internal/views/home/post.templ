@@ -70,7 +70,10 @@ templ ManyPost(postDatas []PostData, iteration int) {
 				{ postData.Content }
 			</div>
 			@ReactSection(postData.ReactStruct)
-			@LoadCommentBtn(postData.PostID, postData.CommentCount)
+			@LoadCommentBtn(CommentData{
+				PostID: 	 postData.PostID,
+				ReplyCount: postData.CommentCount,
+			})
 		</div>
 	}
 	<div

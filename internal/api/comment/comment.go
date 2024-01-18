@@ -44,22 +44,28 @@ func SendComment(c echo.Context) error {
 	return c.String(http.StatusOK, "Comment saved")
 }
 
-func GetPostComment(c echo.Context) error {
+func GetComment(c echo.Context) error {
 	postID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid post id")
 	}
-	var after primitive.ObjectID
+	after := primitive.NilObjectID
 	afterP := c.QueryParam("after")
-	if afterP == "" {
-		after = primitive.NilObjectID
-	} else {
+	if afterP != "" {
 		after, err = primitive.ObjectIDFromHex(afterP)
 		if err != nil {
-			return c.String(http.StatusBadRequest, "Invalid after id")
+			return c.String(http.StatusBadRequest, "Invalid after id : "+afterP)
 		}
 	}
-	comments, err := comment.RetrieveAll(postID, primitive.NilObjectID, after)
+	parent := primitive.NilObjectID
+	parentP := c.QueryParam("parent")
+	if parentP != "" {
+		parent, err = primitive.ObjectIDFromHex(parentP)
+		if err != nil {
+			return c.String(http.StatusBadRequest, "Invalid parent id : "+parentP)
+		}
+	}
+	comments, err := comment.RetrieveAll(postID, parent, after)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error getting comments")
 	}
@@ -75,52 +81,18 @@ func GetPostComment(c echo.Context) error {
 		}
 		commentData := home.CommentData{
 			PostID:     postID.Hex(),
+			ParentID:   cm.Parent.Hex(),
 			CommentID:  cm.ID.Hex(),
 			Content:    cm.Content,
 			Username:   user.Username,
 			ReplyCount: int(replyCount),
-			Time:       cm.CreatedAt.Format(time.RFC3339),
 		}
 		commentDatas = append(commentDatas, commentData)
 	}
 	if len(commentDatas) == 0 {
 		return c.String(http.StatusNotFound, "No comments found")
 	}
-
-	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas, true))
-
-}
-
-func GetReply(c echo.Context) error {
-	parentID, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Invalid parent id")
-	}
-	comments, err := comment.RetrieveAll(primitive.NilObjectID, parentID, primitive.NilObjectID)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error getting comments")
-	}
-	var commentDatas []home.CommentData
-	for _, cm := range comments {
-		user, err := user.FindOne(primitive.M{"_id": cm.UserID})
-		if err != nil || user.ID == primitive.NilObjectID {
-			continue
-		}
-		replyCount, err := comment.ReplyCount(cm.ID)
-		if err != nil {
-			replyCount = 0
-		}
-		commentData := home.CommentData{
-			PostID:     cm.PostID.Hex(),
-			CommentID:  cm.ID.Hex(),
-			Content:    cm.Content,
-			Username:   user.Username,
-			ReplyCount: int(replyCount),
-		}
-		commentDatas = append(commentDatas, commentData)
-	}
-
-	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas, false))
+	return echotempl.Templ(c, 200, home.LoadedComment(commentDatas))
 }
 
 func GetCommentCount(c echo.Context) error {
@@ -128,17 +100,16 @@ func GetCommentCount(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid post id")
 	}
-	count, err := comment.CommentCount(postID)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error getting comment count")
+	parentID, err := primitive.ObjectIDFromHex(c.QueryParam("parent"))
+	if err != nil || parentID == primitive.NilObjectID {
+		parentID = primitive.NilObjectID
 	}
-	return c.String(200, util.Format(int(count)))
-}
-
-func GetReplyCount(c echo.Context) error {
-	parentID, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Invalid parent id")
+	if parentID != primitive.NilObjectID {
+		count, err := comment.CommentCount(postID)
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Error getting comment count")
+		}
+		return c.String(200, util.Format(int(count)))
 	}
 	count, err := comment.ReplyCount(parentID)
 	if err != nil {

@@ -43,11 +43,8 @@ func InitPost(g *echo.Group) {
 func initComment(g *echo.Group) {
 	c := g.Group("/comment")
 	c.POST("/send/:id", comment.SendComment, Auth)
-	// api/v1/comment/send/:id?replying=replyID
-	c.GET("/post/:id", comment.GetPostComment)
-	c.GET("/reply/:id", comment.GetReply)
+	c.GET("/get/:id", comment.GetComment)
 	c.GET("/count/:id", comment.GetCommentCount)
-	c.GET("/reply-count/:id", comment.GetReplyCount)
 }
 
 func initReaction(g *echo.Group) {
