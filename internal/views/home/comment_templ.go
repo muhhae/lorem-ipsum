@@ -214,7 +214,7 @@ func CommentInput(url string, reply bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"none\" class=\"w-full join join-vertical\" x-show=\"open\" x-on:htmx:before-request=\"loading = true\" x-on:htmx:after-request=\"$event.target.reset();loading = false;htmx.trigger($refs.commentCount, &#39;update&#39;);\"><textarea name=\"content\" class=\"join-item textarea textarea-bordered w-full\" rows=\"3\" placeholder=\"Comment...\"></textarea><div x-show=\"loading\" class=\"join-item btn btn-outline text-lg\"><span class=\"loading loading-lg loading-dots mx-auto \"></span></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"none\" class=\"w-full join join-vertical\" x-show=\"open\" x-on:htmx:before-request=\"loading = true\" x-on:htmx:after-request=\"$event.target.reset();loading = false;htmx.trigger($refs.commentCount, &#39;update&#39;);htmx.trigger($refs.loader, &#39;update&#39;);\"><textarea name=\"content\" class=\"join-item textarea textarea-bordered w-full\" rows=\"3\" placeholder=\"Comment...\"></textarea><div x-show=\"loading\" class=\"join-item btn btn-outline text-lg\"><span class=\"loading loading-lg loading-dots mx-auto \"></span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -412,7 +412,7 @@ func commentLoader(url string) templ.Component {
 			templ_7745c5c3_Var20 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-trigger=\"intersect\" hx-swap=\"outerHTML\" hx-get=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-trigger=\"intersect, update\" x-ref=\"loader\" x-init=\"periodicIntersectUpdateObserver.observe($el)\" hx-swap=\"outerHTML\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

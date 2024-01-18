@@ -72,7 +72,7 @@ templ CommentInput(url string, reply bool) {
 			class="w-full join join-vertical"
 			x-show="open"
 			x-on:htmx:before-request="loading = true"
-			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.commentCount, 'update');"
+			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.commentCount, 'update');htmx.trigger($refs.loader, 'update');"
 		>
 			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
 			<div x-show="loading" class="join-item btn btn-outline text-lg">
@@ -142,7 +142,9 @@ templ LoadCommentBtn(c CommentData) {
 templ commentLoader(url string) {
 	<div
 		id="loader"
-		hx-trigger="intersect"
+		hx-trigger="intersect, update"
+		x-ref="loader"
+		x-init="periodicIntersectUpdateObserver.observe($el)"
 		hx-swap="outerHTML"
 		hx-get={ url }
 		hx-on:response-error="console.log('error', event.detail)"
