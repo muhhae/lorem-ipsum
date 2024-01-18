@@ -60,10 +60,9 @@ templ CommentInput(url string, reply bool) {
 				this.open = !this.open;
 			}
 		}"
-		class=""
 	>
 		if reply {
-			<button x-on:click="toggle()" class="btn btn-xs btn-outline w-full my-4 text-sm">Reply</button>
+			<button x-on:click="toggle()" class="btn btn-xs btn-outline w-full mb-4 text-sm">Reply</button>
 		} else {
 			<button x-on:click="toggle()" class="btn btn-outline w-full my-4 text-xl">Add Comment</button>
 		}
@@ -137,13 +136,6 @@ templ LoadCommentBtn(c CommentData) {
 			@commentLoader(loaderURL(c)) {
 			}
 		</div>
-		// <div class=" divider">
-		// 	<button
-		// 		class="btn btn-ghost"
-		// 	>
-		// 		Show 0 Comments
-		// 	</button>
-		// </div>
 	</div>
 }
 
