@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/mail"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -44,8 +45,8 @@ func SignUp(c echo.Context) error {
 	}
 	req.Password = string(hashedPassword)
 	newUser := user.User{
-		Email:    req.Email,
-		Username: req.Username,
+		Email:    strings.ToLower(req.Email),
+		Username: strings.ToLower(req.Username),
 		Password: req.Password,
 	}
 	_, err = newUser.Save()
@@ -81,9 +82,10 @@ func SignIn(c echo.Context) error {
 	}
 	var authorized bool
 	var u *user.User
-	email, err := mail.ParseAddress(req.EmailOrUsername)
+	email, err := mail.ParseAddress(strings.ToLower(req.EmailOrUsername))
 	if err != nil || email == nil {
-		u, err = user.FindOne(bson.M{"username": req.EmailOrUsername})
+		username := strings.ToLower(req.EmailOrUsername)
+		u, err = user.FindOne(bson.M{"username": username})
 		if err != nil {
 			return c.String(http.StatusNotFound, "No user found with the provided username, please check your username and try again or sign up")
 		}
