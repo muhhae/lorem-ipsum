@@ -14,6 +14,21 @@ var periodicIntersectUpdateObserver = new IntersectionObserver((entries) => {
     })
 })
 
+// var script = document.createElement('script');
+// script.src = "https://cdn.jsdelivr.net/npm/clusterize.js@1.0.0/clusterize.min.js";
+// document.head.appendChild(script);
+
+// var style = document.createElement('link');
+// style.rel = "stylesheet";
+// style.href = "https://cdn.jsdelivr.net/npm/clusterize.js@1.0.0/clusterize.min.css";
+// document.head.appendChild(style);
+
+
+// var clusterize = new Clusterize({
+//     scrollId: 'scrollArea',
+//     contentId: 'contentArea'
+// });
+
 document.addEventListener('DOMContentLoaded', () => {
     const maxFileSize = 1024 * 1024 * 5
     const maxFileCount = 8
