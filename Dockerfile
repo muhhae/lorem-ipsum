@@ -20,7 +20,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o ./app ./cmd/app/.
 FROM alpine:latest
 WORKDIR /app
 
-COPY --from=go ./app/. ./
+COPY --from=go ./app/app ./
+COPY --from=go ./app/internal/static ./internal/static
 
 EXPOSE 8080
 ENV PORT=8080
