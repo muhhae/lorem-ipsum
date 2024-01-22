@@ -91,7 +91,7 @@ func Comment(c CommentData) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex\"><div class=\"pt-2 divider divider-start divider-horizontal\"><div class=\"avatar placeholder\"><div class=\"bg-accent text-2xl text-accent-content rounded-full w-12\"><span>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex\"><div class=\"p-2 divider divider-start divider-horizontal\"><div class=\"avatar placeholder\"><div class=\"bg-accent text-2xl text-accent-content rounded-full w-12\"><span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -104,14 +104,14 @@ func Comment(c CommentData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></div></div></div><div class=\"w-full ml-3 py-2\"><div class=\"text-md font-black\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></div></div></div><div class=\"w-full ml-3 py-2\"><div><div class=\"text-md font-black\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(c.Username)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\comment.templ`, Line: 42, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\comment.templ`, Line: 43, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -124,13 +124,13 @@ func Comment(c CommentData) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(c.Content)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\comment.templ`, Line: 45, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\comment.templ`, Line: 46, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -262,7 +262,7 @@ func showBtnClass(c CommentData) string {
 	if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
 		return "btn btn-ghost btn-xs"
 	} else {
-		return "btn btn-ghost"
+		return "btn btn-ghost btn-xs"
 	}
 }
 
@@ -330,7 +330,7 @@ func LoadCommentBtn(c CommentData) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(c.ReplyCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\comment.templ`, Line: 128, Col: 33}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\comment.templ`, Line: 130, Col: 33}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -420,7 +420,7 @@ func commentLoader(url string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-on:response-error=\"console.log(&#39;error&#39;, event.detail)\"></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-on:response-error=\"console.log(&#39;error&#39;, event.detail)\"><span class=\"htmx-indicator loading loading-spinner loading-sm\"></span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -444,7 +444,7 @@ func buttonCommentLoader(url string) templ.Component {
 			templ_7745c5c3_Var21 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-swap=\"outerHTML\" hx-get=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{ loading: false }\" id=\"loader\" hx-swap=\"outerHTML\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -452,7 +452,7 @@ func buttonCommentLoader(url string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-on:response-error=\"console.log(&#39;error&#39;, event.detail)\" class=\"divider pb-4\" hx-trigger=\"get\"><span class=\"btn btn-ghost\" x-on:click=\"htmx.trigger($el.parentElement, &#39;get&#39;)\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-on:response-error=\"console.log(&#39;error&#39;, event.detail)\" x-on:htmx:before-request=\"loading = true\" x-on:htmx:after-request=\"loading = false\" class=\"divider pb-4\" hx-trigger=\"get\"><span class=\"btn btn-ghost btn-xs\" x-on:click=\"htmx.trigger($el.parentElement, &#39;get&#39;)\"><span x-show=\"loading\" class=\"loading loading-spinner loading-xs\"></span> <span x-show=\"!loading\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -461,7 +461,7 @@ func buttonCommentLoader(url string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

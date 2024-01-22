@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -88,12 +87,12 @@ func Upload(c echo.Context) error {
 }
 
 func Default(c echo.Context) error {
-	iterationStr := c.QueryParam("iteration")
-	iteration, err := strconv.Atoi(iterationStr)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Invalid iteration")
+	if c.QueryParam("olderThan") != "" {
+		return Older(c)
+	} else if c.QueryParam("newerThan") != "" {
+		return Newer(c)
 	}
-	posts, err := post.RetrievePosts(nil, int64(iteration))
+	posts, err := post.FindOlder(primitive.NilObjectID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error retrieving posts")
 	}
@@ -104,7 +103,7 @@ func Default(c echo.Context) error {
 	if len(postDatas) == 0 {
 		return echotempl.Templ(c, 200, home.EndOfFeed())
 	}
-	return echotempl.Templ(c, 200, home.ManyPost(postDatas, iteration))
+	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeBoth))
 }
 
 func Older(c echo.Context) error {
@@ -124,7 +123,8 @@ func Older(c echo.Context) error {
 	if len(postDatas) == 0 {
 		return echotempl.Templ(c, 200, home.EndOfFeed())
 	}
-	return c.NoContent(http.StatusOK)
+	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeOlder))
+
 }
 
 func Newer(c echo.Context) error {
@@ -142,9 +142,9 @@ func Newer(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error retrieving posts")
 	}
 	if len(postDatas) == 0 {
-		return echotempl.Templ(c, 200, home.EndOfFeed())
+		return c.String(http.StatusNoContent, "No newer posts")
 	}
-	return c.NoContent(http.StatusOK)
+	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeNewer))
 }
 
 func PostToPostdatas(posts []post.Post, userID primitive.ObjectID) ([]home.PostData, error) {

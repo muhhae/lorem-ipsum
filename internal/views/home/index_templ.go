@@ -47,7 +47,7 @@ func Index() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-trigger=\"intersect\" hx-swap=\"outerHTML\" hx-get=\"/api/v1/post/Default?iteration=0\" class=\"loading loading-spinner loading-lg mx-auto\"></div></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-trigger=\"intersect\" hx-swap=\"outerHTML\" hx-get=\"/api/v1/post/Default\" class=\"loading loading-spinner loading-lg mx-auto\"></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

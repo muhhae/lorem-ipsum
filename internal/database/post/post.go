@@ -44,7 +44,7 @@ func FindOne(filter bson.M) (*Post, error) {
 }
 
 const (
-	postLimit int64 = 4
+	postLimit int64 = 2
 )
 
 func RetrievePosts(filter bson.M, iteration int64) ([]Post, error) {
@@ -85,10 +85,10 @@ func FindOlder(olderThan primitive.ObjectID) ([]Post, error) {
 			bson.M{
 				"$or": []interface{}{
 					bson.M{
-						"created_at": bson.M{"$lt": olderThanTime},
+						"createdAt": bson.M{"$lt": olderThanTime},
 					},
 					bson.M{
-						"created_at": olderThanTime,
+						"createdAt": olderThanTime,
 						"_id": bson.M{
 							"$lt": olderThanPostId,
 						},
@@ -104,7 +104,7 @@ func FindOlder(olderThan primitive.ObjectID) ([]Post, error) {
 	limit := postLimit
 	cursor, err := col.Find(context.Background(), filter, &options.FindOptions{
 		Limit: &limit,
-		Sort:  bson.M{"created_at": -1},
+		Sort:  bson.M{"createdAt": -1},
 	})
 	if err != nil {
 		return nil, err
@@ -131,10 +131,10 @@ func FindNewer(newerThan primitive.ObjectID) ([]Post, error) {
 			bson.M{
 				"$or": []interface{}{
 					bson.M{
-						"created_at": bson.M{"$gt": newerThanTime},
+						"createdAt": bson.M{"$gt": newerThanTime},
 					},
 					bson.M{
-						"created_at": newerThanTime,
+						"createdAt": newerThanTime,
 						"_id": bson.M{
 							"$gt": newerThanPostId,
 						},
@@ -150,7 +150,7 @@ func FindNewer(newerThan primitive.ObjectID) ([]Post, error) {
 	limit := postLimit
 	cursor, err := col.Find(context.Background(), filter, &options.FindOptions{
 		Limit: &limit,
-		Sort:  bson.M{"created_at": -1},
+		Sort:  bson.M{"createdAt": -1},
 	})
 	if err != nil {
 		return nil, err

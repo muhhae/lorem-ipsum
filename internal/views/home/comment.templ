@@ -31,7 +31,7 @@ templ LoadedComment(comments []CommentData) {
 
 templ Comment(c CommentData) {
 	<div class="flex">
-		<div class="pt-2 divider divider-start divider-horizontal">
+		<div class="p-2 divider divider-start divider-horizontal">
 			<div class="avatar placeholder">
 				<div class="bg-accent text-2xl text-accent-content rounded-full w-12">
 					<span>{ strings.ToUpper(string([]rune(c.Username)[0])) }</span>
@@ -39,11 +39,13 @@ templ Comment(c CommentData) {
 			</div>
 		</div>
 		<div class="w-full ml-3 py-2">
-			<div class="text-md font-black">
-				{ c.Username }
-			</div>
-			<div class="text-sm">
-				{ c.Content }
+			<div>
+				<div class="text-md font-black">
+					{ c.Username }
+				</div>
+				<div class="text-sm">
+					{ c.Content }
+				</div>
 			</div>
 			@LoadCommentBtn(c) {
 			}
@@ -91,7 +93,7 @@ func showBtnClass(c CommentData) string {
 	if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
 		return "btn btn-ghost btn-xs"
 	} else {
-		return "btn btn-ghost"
+		return "btn btn-ghost btn-xs"
 	}
 }
 
@@ -148,23 +150,29 @@ templ commentLoader(url string) {
 		hx-swap="outerHTML"
 		hx-get={ url }
 		hx-on:response-error="console.log('error', event.detail)"
-	></div>
+	>
+		<span class="htmx-indicator loading loading-spinner loading-sm"></span>
+	</div>
 }
 
 templ buttonCommentLoader(url string) {
 	<div
+		x-data="{ loading: false }"
 		id="loader"
 		hx-swap="outerHTML"
 		hx-get={ url }
 		hx-on:response-error="console.log('error', event.detail)"
+		x-on:htmx:before-request="loading = true"
+		x-on:htmx:after-request="loading = false"
 		class="divider pb-4"
 		hx-trigger="get"
 	>
 		<span
-			class="btn btn-ghost"
+			class="btn btn-ghost btn-xs"
 			x-on:click="htmx.trigger($el.parentElement, 'get')"
 		>
-			Load More
+			<span x-show="loading" class="loading loading-spinner loading-xs"></span>
+			<span x-show="!loading">Load More</span>
 		</span>
 	</div>
 }

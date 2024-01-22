@@ -11,7 +11,8 @@ import "io"
 import "bytes"
 
 import "github.com/muhhae/lorem-ipsum/internal/views/util"
-import "strconv"
+
+// import "strconv"
 
 func Post(username string, content string, likeCount int, commentCount int) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -33,7 +34,7 @@ func Post(username string, content string, likeCount int, commentCount int) temp
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(username)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 15, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 16, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -46,7 +47,7 @@ func Post(username string, content string, likeCount int, commentCount int) temp
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(content)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 16, Col: 12}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 17, Col: 12}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -86,7 +87,7 @@ func Post(username string, content string, likeCount int, commentCount int) temp
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(likeCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 24, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 25, Col: 28}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -149,7 +150,7 @@ func Post(username string, content string, likeCount int, commentCount int) temp
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(commentCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 33, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 34, Col: 66}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -190,11 +191,23 @@ type PostData struct {
 	ReactStruct  ReactData
 }
 
-func postUrl(iteration int) string {
-	return "/api/v1/post/Default?iteration=" + strconv.Itoa(iteration)
+func olderPost(p PostData) string {
+	return "/api/v1/post/Default?olderThan=" + p.PostID
 }
 
-func ManyPost(postDatas []PostData, iteration int) templ.Component {
+func newerPost(p PostData) string {
+	return "/api/v1/post/Default?newerThan=" + p.PostID
+}
+
+type ManyPostType int
+
+const (
+	ManyPostTypeBoth ManyPostType = iota
+	ManyPostTypeNewer
+	ManyPostTypeOlder
+)
+
+func ManyPost(postDatas []PostData, manyPostType ManyPostType) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -207,6 +220,20 @@ func ManyPost(postDatas []PostData, iteration int) templ.Component {
 			templ_7745c5c3_Var16 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		if manyPostType == ManyPostTypeBoth || manyPostType == ManyPostTypeNewer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-trigger=\"intersect, update\" hx-swap=\"outerHTML\" hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(newerPost(postDatas[0])))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"flex w-full justify-center\"><span class=\"htmx-indicator loading loading-spinner loading-lg\"></span></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
 		for _, postData := range postDatas {
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full rounded-none card mb-2 p-4 text-base-content\">")
 			if templ_7745c5c3_Err != nil {
@@ -233,7 +260,7 @@ func ManyPost(postDatas []PostData, iteration int) templ.Component {
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 68, Col: 74}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 92, Col: 74}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
@@ -246,7 +273,7 @@ func ManyPost(postDatas []PostData, iteration int) templ.Component {
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Content)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 69, Col: 22}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 93, Col: 22}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
@@ -272,17 +299,19 @@ func ManyPost(postDatas []PostData, iteration int) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-trigger=\"intersect\" hx-swap=\"outerHTML\" hx-get=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(postUrl(iteration + 1)))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"loading loading-spinner loading-lg mx-auto\"></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		if manyPostType == ManyPostTypeBoth || manyPostType == ManyPostTypeOlder {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"loader\" hx-trigger=\"intersect, update\" hx-swap=\"outerHTML\" hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(olderPost(postDatas[len(postDatas)-1])))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"flex w-full justify-center\"><span class=\"htmx-indicator loading loading-spinner loading-lg\"></span></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
 		if !templ_7745c5c3_IsBuffer {
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
@@ -360,14 +389,14 @@ func LikeCount(likeCount int, postID string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-trigger=\"intersect, update\" x-on:htmx:after-request=\"afterRequest()\" hx-swap=\"innerHTML\" class=\"like-count h-12 w-24 rounded-xl bg-primary font-mono font-black text-2xl text-primary-content text-center flex items-center justify-center\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-trigger=\"intersect, update\" x-on:htmx:after-request=\"afterRequest()\" x-init=\"periodicIntersectUpdateObserver.observe($el)\" hx-swap=\"innerHTML\" class=\"like-count h-12 w-24 rounded-xl bg-primary font-mono font-black text-2xl text-primary-content text-center flex items-center justify-center\"><span class=\"htmx-indicator loading loading-spinner loading-lg\"></span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(likeCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 128, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 158, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {
