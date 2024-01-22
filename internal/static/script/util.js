@@ -7,7 +7,7 @@ var periodicIntersectUpdateObserver = new IntersectionObserver((entries) => {
         if (entry.isIntersecting) {
             entry.target.intervalID = setInterval(() => {
                 htmx.trigger(entry.target, 'update')
-            }, 30000)
+            }, 5000)
         } else {
             clearInterval(entry.target.intervalID)
         }

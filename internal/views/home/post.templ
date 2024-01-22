@@ -1,7 +1,8 @@
 package home
 
 import "github.com/muhhae/lorem-ipsum/internal/views/util"
-import "strconv"
+
+// import "strconv"
 
 templ Post(username string, content string, likeCount int, commentCount int) {
 	<div class="w-full card rounded-none mb-10 bg-transparent p-4 text-base-content">
@@ -51,11 +52,34 @@ type PostData struct {
 	ReactStruct  ReactData
 }
 
-func postUrl(iteration int) string {
-	return "/api/v1/post/Default?iteration=" + strconv.Itoa(iteration)
+func olderPost(p PostData) string {
+	return "/api/v1/post/Default?olderThan=" + p.PostID
 }
 
-templ ManyPost(postDatas []PostData, iteration int) {
+func newerPost(p PostData) string {
+	return "/api/v1/post/Default?newerThan=" + p.PostID
+}
+
+type ManyPostType int
+
+const (
+	ManyPostTypeBoth ManyPostType = iota
+	ManyPostTypeNewer
+	ManyPostTypeOlder
+)
+
+templ ManyPost(postDatas []PostData, manyPostType ManyPostType) {
+	if manyPostType == ManyPostTypeBoth || manyPostType == ManyPostTypeNewer {
+		<div
+			id="loader"
+			hx-trigger="intersect, update"
+			hx-swap="outerHTML"
+			hx-get={ newerPost(postDatas[0]) }
+			class="flex w-full justify-center"
+		>
+			<span class="htmx-indicator loading loading-spinner loading-lg"></span>
+		</div>
+	}
 	for _, postData := range postDatas {
 		<div class="w-full rounded-none card mb-2 p-4 text-base-content">
 			for _, imgSrc := range postData.ImgSrc {
@@ -76,13 +100,17 @@ templ ManyPost(postDatas []PostData, iteration int) {
 			})
 		</div>
 	}
-	<div
-		id="loader"
-		hx-trigger="intersect"
-		hx-swap="outerHTML"
-		hx-get={ postUrl(iteration + 1) }
-		class="loading loading-spinner loading-lg mx-auto"
-	></div>
+	if manyPostType == ManyPostTypeBoth || manyPostType == ManyPostTypeOlder {
+		<div
+			id="loader"
+			hx-trigger="intersect, update"
+			hx-swap="outerHTML"
+			hx-get={ olderPost(postDatas[len(postDatas)-1]) }
+			class="flex w-full justify-center"
+		>
+			<span class="htmx-indicator loading loading-spinner loading-lg"></span>
+		</div>
+	}
 }
 
 templ ReactSection(reactData ReactData) {
@@ -123,9 +151,11 @@ templ LikeCount(likeCount int, postID string) {
 		hx-get={ "/api/v1/reaction/count/" + postID }
 		hx-trigger="intersect, update"
 		x-on:htmx:after-request="afterRequest()"
+		x-init="periodicIntersectUpdateObserver.observe($el)"
 		hx-swap="innerHTML"
 		class="like-count h-12 w-24 rounded-xl bg-primary font-mono font-black text-2xl text-primary-content text-center flex items-center justify-center"
 	>
+		<span class="htmx-indicator loading loading-spinner loading-lg"></span>
 		{ util.Format(likeCount) }
 	</div>
 }

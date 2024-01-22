@@ -1,10 +1,10 @@
 package post
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -87,20 +87,72 @@ func Upload(c echo.Context) error {
 }
 
 func Default(c echo.Context) error {
-	iterationStr := c.QueryParam("iteration")
-	iteration, err := strconv.Atoi(iterationStr)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Invalid iteration")
+	if c.QueryParam("olderThan") != "" {
+		return Older(c)
+	} else if c.QueryParam("newerThan") != "" {
+		return Newer(c)
 	}
-	posts, err := post.RetrievePosts(nil, int64(iteration))
+	posts, err := post.FindOlder(primitive.NilObjectID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error retrieving posts")
 	}
+	postDatas, err := PostToPostdatas(posts, c.Get("id").(primitive.ObjectID))
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error retrieving posts")
+	}
+	if len(postDatas) == 0 {
+		return echotempl.Templ(c, 200, home.EndOfFeed())
+	}
+	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeBoth))
+}
+
+func Older(c echo.Context) error {
+	olderThan := c.QueryParam("olderThan")
+	olderThanID, err := primitive.ObjectIDFromHex(olderThan)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid olderThan id")
+	}
+	posts, err := post.FindOlder(olderThanID)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error retrieving posts")
+	}
+	postDatas, err := PostToPostdatas(posts, c.Get("id").(primitive.ObjectID))
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error retrieving posts")
+	}
+	if len(postDatas) == 0 {
+		return echotempl.Templ(c, 200, home.EndOfFeed())
+	}
+	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeOlder))
+
+}
+
+func Newer(c echo.Context) error {
+	newerThan := c.QueryParam("newerThan")
+	newerThanID, err := primitive.ObjectIDFromHex(newerThan)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid olderThan id")
+	}
+	posts, err := post.FindNewer(newerThanID)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error retrieving posts")
+	}
+	postDatas, err := PostToPostdatas(posts, c.Get("id").(primitive.ObjectID))
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error retrieving posts")
+	}
+	if len(postDatas) == 0 {
+		return c.String(http.StatusNoContent, "No newer posts")
+	}
+	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeNewer))
+}
+
+func PostToPostdatas(posts []post.Post, userID primitive.ObjectID) ([]home.PostData, error) {
 	postDatas := make([]home.PostData, len(posts))
 	for i, p := range posts {
 		owner, err := user.FindOne(bson.M{"_id": p.AuthorID})
 		if err != nil {
-			return c.String(http.StatusInternalServerError, "Error retrieving posts")
+			return nil, errors.New("error retrieving posts")
 		}
 		images := make([]string, len(p.ImageIDs))
 		for i, imgID := range p.ImageIDs {
@@ -108,16 +160,16 @@ func Default(c echo.Context) error {
 		}
 		likeCount, err := post.CountReaction(p.ID)
 		if err != nil {
-			return c.String(http.StatusInternalServerError, "Error retrieving posts")
+			return nil, errors.New("error retrieving posts")
 		}
-		userID := c.Get("id").(primitive.ObjectID)
+		userID := userID
 		var v int
 		if userID == primitive.NilObjectID {
 			v = 0
 		} else {
-			v, err = post.GetReaction(p.ID, c.Get("id").(primitive.ObjectID))
+			v, err = post.GetReaction(p.ID, userID)
 			if err != nil {
-				return c.String(http.StatusInternalServerError, "Error retrieving posts")
+				return nil, errors.New("error retrieving posts")
 			}
 		}
 		commentCount, err := comment.CommentCount(p.ID)
@@ -138,8 +190,5 @@ func Default(c echo.Context) error {
 		}
 		postDatas[i] = postData
 	}
-	if len(postDatas) == 0 {
-		return echotempl.Templ(c, 200, home.EndOfFeed())
-	}
-	return echotempl.Templ(c, 200, home.ManyPost(postDatas, iteration))
+	return postDatas, nil
 }
