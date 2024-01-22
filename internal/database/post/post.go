@@ -62,3 +62,99 @@ func RetrievePosts(filter bson.M, iteration int64) ([]Post, error) {
 	err = cursor.All(context.Background(), &posts)
 	return posts, err
 }
+
+func FindNewerOrOlder(anchor primitive.ObjectID, newer bool) ([]Post, error) {
+	return nil, nil
+}
+
+func FindOlder(olderThan primitive.ObjectID) ([]Post, error) {
+	col := connection.GetDB().Posts
+	var posts []Post
+	olderThanTime := time.Now()
+	var olderThanPostId primitive.ObjectID
+
+	if olderThan != primitive.NilObjectID {
+		olderThanPost, err := FindOne(bson.M{"_id": olderThan})
+		if err == nil {
+			olderThanTime = olderThanPost.CreatedAt
+			olderThanPostId = olderThanPost.ID
+		}
+	}
+	filter := primitive.M{
+		"$and": []interface{}{
+			bson.M{
+				"$or": []interface{}{
+					bson.M{
+						"created_at": bson.M{"$lt": olderThanTime},
+					},
+					bson.M{
+						"created_at": olderThanTime,
+						"_id": bson.M{
+							"$lt": olderThanPostId,
+						},
+					},
+				},
+			},
+			bson.M{
+				"_id": bson.M{"$ne": olderThanPostId},
+			},
+		},
+	}
+
+	limit := postLimit
+	cursor, err := col.Find(context.Background(), filter, &options.FindOptions{
+		Limit: &limit,
+		Sort:  bson.M{"created_at": -1},
+	})
+	if err != nil {
+		return nil, err
+	}
+	err = cursor.All(context.Background(), &posts)
+	return posts, err
+}
+
+func FindNewer(newerThan primitive.ObjectID) ([]Post, error) {
+	col := connection.GetDB().Posts
+	var posts []Post
+	newerThanTime := time.Now()
+	var newerThanPostId primitive.ObjectID
+
+	if newerThan != primitive.NilObjectID {
+		olderThanPost, err := FindOne(bson.M{"_id": newerThan})
+		if err == nil {
+			newerThanTime = olderThanPost.CreatedAt
+			newerThanPostId = olderThanPost.ID
+		}
+	}
+	filter := primitive.M{
+		"$and": []interface{}{
+			bson.M{
+				"$or": []interface{}{
+					bson.M{
+						"created_at": bson.M{"$gt": newerThanTime},
+					},
+					bson.M{
+						"created_at": newerThanTime,
+						"_id": bson.M{
+							"$gt": newerThanPostId,
+						},
+					},
+				},
+			},
+			bson.M{
+				"_id": bson.M{"$ne": newerThanPostId},
+			},
+		},
+	}
+
+	limit := postLimit
+	cursor, err := col.Find(context.Background(), filter, &options.FindOptions{
+		Limit: &limit,
+		Sort:  bson.M{"created_at": -1},
+	})
+	if err != nil {
+		return nil, err
+	}
+	err = cursor.All(context.Background(), &posts)
+	return posts, err
+}

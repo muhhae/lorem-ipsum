@@ -23,7 +23,7 @@ templ LoadedComment(comments []CommentData) {
 			@Comment(comment)
 		}
 		if len(comments) > 0 {
-			@commentLoader(nextLoaderURL(comments[len(comments)-1])) {
+			@buttonCommentLoader(nextLoaderURL(comments[len(comments)-1])) {
 			}
 		}
 	</div>
@@ -110,6 +110,10 @@ templ LoadCommentBtn(c CommentData) {
 			} 
 		}"
 	>
+		<div x-show="open">
+			@commentLoader(loaderURL(c)) {
+			}
+		</div>
 		<div class=" divider">
 			<button
 				x-on:click="toggle()"
@@ -132,10 +136,6 @@ templ LoadCommentBtn(c CommentData) {
 		</div>
 		@CommentInput(commentInputURL(c), c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex()) {
 		}
-		<div x-show="open">
-			@commentLoader(loaderURL(c)) {
-			}
-		</div>
 	</div>
 }
 
@@ -149,6 +149,24 @@ templ commentLoader(url string) {
 		hx-get={ url }
 		hx-on:response-error="console.log('error', event.detail)"
 	></div>
+}
+
+templ buttonCommentLoader(url string) {
+	<div
+		id="loader"
+		hx-swap="outerHTML"
+		hx-get={ url }
+		hx-on:response-error="console.log('error', event.detail)"
+		class="divider pb-4"
+		hx-trigger="get"
+	>
+		<span
+			class="btn btn-ghost"
+			x-on:click="htmx.trigger($el.parentElement, 'get')"
+		>
+			Load More
+		</span>
+	</div>
 }
 
 func commentCountURL(c CommentData) string {
