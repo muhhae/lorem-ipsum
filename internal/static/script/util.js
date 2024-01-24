@@ -96,7 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 Images = []
                 selectedImages.innerHTML = ''
                 e.target.reset()
-                location.reload()
+                // location.reload()
+                loader = document.getElementById("newer-post-loader")
+                if (loader) {
+                    htmx.trigger(loader, 'update')
+                    Alpine.store('postUploading', false)
+                }
             }
         })
 
