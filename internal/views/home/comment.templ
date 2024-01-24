@@ -38,7 +38,7 @@ templ Comment(c CommentData) {
 				</div>
 			</div>
 		</div>
-		<div class="w-full ml-3 py-2">
+		<div class="w-full ml-3 mb-2 py-2">
 			<div>
 				<div class="text-md font-black">
 					{ c.Username }
@@ -54,29 +54,19 @@ templ Comment(c CommentData) {
 }
 
 templ CommentInput(url string, reply bool) {
-	<div
-		x-data="{ 
-			open: false,
-			loading: false,
-			toggle() {
-				this.open = !this.open;
-			}
-		}"
-	>
-		if reply {
-			<button x-on:click="toggle()" class="btn btn-xs btn-outline w-full mb-4 text-sm">Reply</button>
-		} else {
-			<button x-on:click="toggle()" class="btn btn-outline w-full my-4 text-xl">Add Comment</button>
+	<div>
+		if !reply {
+			<button x-on:click="inputToggle()" class="btn btn-outline w-full my-4 text-xl">Add Comment</button>
 		}
 		<form
 			hx-post={ url }
 			hx-swap="none"
 			class="w-full join join-vertical"
-			x-show="open"
+			x-show="inputOpen"
 			x-on:htmx:before-request="loading = true"
 			x-on:htmx:after-request="$event.target.reset();loading = false;htmx.trigger($refs.commentCount, 'update');htmx.trigger($refs.loader, 'update');"
 		>
-			<textarea name="content" class="join-item textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
+			<textarea name="content" class="join-item mt-2 textarea textarea-bordered w-full" rows="3" placeholder="Comment..."></textarea>
 			<div x-show="loading" class="join-item btn btn-outline text-lg">
 				<span class="loading loading-lg loading-dots mx-auto "></span>
 			</div>
@@ -87,14 +77,6 @@ templ CommentInput(url string, reply bool) {
 			}
 		</form>
 	</div>
-}
-
-func showBtnClass(c CommentData) string {
-	if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
-		return "btn btn-ghost btn-xs"
-	} else {
-		return "btn btn-ghost btn-xs"
-	}
 }
 
 templ LoadCommentBtn(c CommentData) {
@@ -109,33 +91,54 @@ templ LoadCommentBtn(c CommentData) {
 				} else {
 					this.showText = 'Show';
 				}
-			} 
+			},
+			loading: false,
+			inputOpen: false,
+			inputToggle() {
+				this.inputOpen = !this.inputOpen;
+			},
 		}"
 	>
 		<div x-show="open">
 			@commentLoader(loaderURL(c)) {
 			}
 		</div>
-		<div class=" divider">
-			<button
-				x-on:click="toggle()"
-				class={ showBtnClass(c) }
-			>
-				<span x-text="showText"></span>
-				<span
-					hx-get={ commentCountURL(c) }
-					hx-swap="innerHTML"
-					hx-trigger="update, intersect"
-					x-ref="commentCount"
-					x-init="periodicIntersectUpdateObserver.observe($el)"
-				>{  util.Format(c.ReplyCount) }</span>
-				if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
+		if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
+			<div class="w-full divider divider-end">
+				<button x-on:click="inputToggle()" class="btn btn-xs btn-ghost text-xs">Reply</button>
+				<button
+					x-on:click="toggle()"
+					class="btn btn-ghost btn-xs"
+				>
+					<span x-text="showText"></span>
+					<span
+						hx-get={ commentCountURL(c) }
+						hx-swap="innerHTML"
+						hx-trigger="update, intersect"
+						x-ref="commentCount"
+						x-init="periodicIntersectUpdateObserver.observe($el)"
+					>{  util.Format(c.ReplyCount) }</span>
 					<span>Replies</span>
-				} else {
+				</button>
+			</div>
+		} else {
+			<div class=" divider">
+				<button
+					x-on:click="toggle()"
+					class="btn btn-ghost btn-xs"
+				>
+					<span x-text="showText"></span>
+					<span
+						hx-get={ commentCountURL(c) }
+						hx-swap="innerHTML"
+						hx-trigger="update, intersect"
+						x-ref="commentCount"
+						x-init="periodicIntersectUpdateObserver.observe($el)"
+					>{  util.Format(c.ReplyCount) }</span>
 					<span>Comments</span>
-				}
-			</button>
-		</div>
+				</button>
+			</div>
+		}
 		@CommentInput(commentInputURL(c), c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex()) {
 		}
 	</div>
@@ -164,15 +167,23 @@ templ buttonCommentLoader(url string) {
 		hx-on:response-error="console.log('error', event.detail)"
 		x-on:htmx:before-request="loading = true"
 		x-on:htmx:after-request="loading = false"
-		class="divider pb-4"
+		class="pb-4"
 		hx-trigger="get"
 	>
 		<span
-			class="btn btn-ghost btn-xs"
+			class="btn btn-ghost btn-square"
 			x-on:click="htmx.trigger($el.parentElement, 'get')"
 		>
 			<span x-show="loading" class="loading loading-spinner loading-xs"></span>
-			<span x-show="!loading">Load More</span>
+			<span x-show="!loading">
+				<svg class="text-accent w-8 h-8 object-cover" height="256px" width="256px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="currentColor">
+					<g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+					<g id="SVGRepo_iconCarrier">
+						<style type="text/css"> .st0{fill:currentColor;} </style>
+						<g><path class="st0" d="M92.574,294.24V124.336H43.277C19.449,124.336,0,144.213,0,168.467v206.44 c0,24.254,19.449,44.133,43.277,44.133h62v45.469c0,3.041,1.824,5.777,4.559,6.932c2.736,1.154,5.957,0.486,8.023-1.641 l49.844-50.76h106.494c23.828,0,43.279-19.879,43.279-44.133v-0.061H172.262C128.314,374.846,92.574,338.676,92.574,294.24z"></path> <path class="st0" d="M462.717,40H172.26c-27.105,0-49.283,22.59-49.283,50.197v204.037c0,27.61,22.178,50.199,49.283,50.199 h164.668l75.348,76.033c2.399,2.442,6.004,3.172,9.135,1.852c3.133-1.322,5.176-4.434,5.176-7.887v-69.998h36.131 c27.106,0,49.283-22.59,49.283-50.199V90.197C512,62.59,489.822,40,462.717,40z M369.156,280.115H195.92v-24.316h173.236V280.115z M439.058,204.129H195.92v-24.314h243.138V204.129z M439.058,128.143H195.92v-24.315h243.138V128.143z"></path> </g>
+					</g>
+				</svg>
+			</span>
 		</span>
 	</div>
 }
