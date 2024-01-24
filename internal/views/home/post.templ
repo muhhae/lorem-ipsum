@@ -58,13 +58,17 @@ templ ManyPost(postDatas []PostData, manyPostType ManyPostType) {
 	}
 	for _, postData := range postDatas {
 		<div class="w-full rounded-none card mb-2 p-4 text-base-content">
-			for _, imgSrc := range postData.ImgSrc {
-				<img
-					class="w-full h-full object-cover"
-					src={ imgSrc }
-					alt="Meme"
-				/>
-			}
+			<div class="w-full h-80 carousel rounded-none bg-transparent">
+				for _, imgSrc := range postData.ImgSrc {
+					<div class="carousel-item w-full">
+						<img
+							class="w-full object-contain"
+							src={ imgSrc }
+							alt="Meme"
+						/>
+					</div>
+				}
+			</div>
 			<div class="card-body mt-4 p-2">
 				<h2 class="card-title text-base-content font-bold">{ postData.Username }</h2>
 				{ postData.Content }
