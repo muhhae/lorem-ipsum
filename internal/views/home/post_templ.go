@@ -105,12 +105,18 @@ func ManyPost(postDatas []PostData, manyPostType ManyPostType) templ.Component {
 			}
 		}
 		for _, postData := range postDatas {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full rounded-none card mb-2 p-4 text-base-content\"><div class=\"w-full h-80 carousel rounded-none bg-transparent\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full rounded-none card mb-2 p-4 text-base-content\"><div x-data=\"{\n					scrollLeft: () =&gt; {\n						$el.scrollLeft -= $el.offsetWidth;\n\n					},\n					scrollRight: () =&gt; {\n						$el.scrollLeft += $el.offsetWidth;\n					}\n				}\" class=\"lg:h-[35vw] h-[85vw] lg:w-[35vw] w-[85vw] mx-auto carousel carousel-center space-x-2 rounded-lg bg-transparent\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+			if len(postData.ImgSrc) > 1 {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"opacity-100 flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-4\"><button x-on:click=\"scrollLeft()\" id=\"prevButton\" class=\"p-0 rounded-l-lg rounded-none bg-transparent hover:bg-base-100/40 border-0 text-base-300 w-2/5 h-full\"><svg class=\"w-full h-full object-contain\" width=\"256px\" height=\"256px\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" transform=\"matrix(-1, 0, 0, 1, 0, 0)\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracurrentColorerCarrier\" stroke-linecurrentcap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_icurrentColoronCarrier\"><path d=\"M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z\" fill=\"currentColor\"></path></g></svg></button></div><div class=\"opacity-100 flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-4\"><button x-on:click=\"scrollRight()\" id=\"nextButton\" class=\"p-0 rounded-r-lg rounded-none bg-transparent hover:bg-base-100/40 border-0 text-base-300 w-2/5 h-full\"><svg class=\"w-full h-full object-contain\" width=\"256px\" height=\"256px\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracurrentColorerCarrier\" stroke-linecurrentcap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_icurrentColoronCarrier\"><path d=\"M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z\" fill=\"currentColor\"></path></g></svg></button></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
 			for _, imgSrc := range postData.ImgSrc {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"carousel-item w-full\"><img class=\"w-full object-contain\" src=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"carousel-item w-full\"><img class=\"w-full h-full object-cover\" src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -130,7 +136,7 @@ func ManyPost(postDatas []PostData, manyPostType ManyPostType) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 72, Col: 74}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 103, Col: 74}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -143,7 +149,7 @@ func ManyPost(postDatas []PostData, manyPostType ManyPostType) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Content)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 73, Col: 22}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 104, Col: 22}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -258,7 +264,7 @@ func LikeCount(likeCount int, postID string) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(likeCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 129, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal\views\home\post.templ`, Line: 160, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
