@@ -4,8 +4,8 @@ tmp_dir = "tmp"
 
 [build]
 args_bin = []
-bin = "tmp\\main.exe"
-cmd = "go build -o ./tmp/main.exe ./cmd/app/."
+bin = "./app"
+cmd = "bun build:linux"
 delay = 500
 exclude_dir = ["assets", "tmp", "vendor", "testdata", "node_modules"]
 exclude_file = []
@@ -20,8 +20,8 @@ kill_delay = "600ms"
 log = "build-errors.log"
 poll = false
 poll_interval = 0
-post_cmd = []
-pre_cmd = ["npm run air"]
+post_cmd = ["bun delete:linux"]
+pre_cmd = []
 rerun = false
 rerun_delay = 500
 send_interrupt = true

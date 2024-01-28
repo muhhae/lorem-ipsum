@@ -3,7 +3,7 @@ module github.com/muhhae/lorem-ipsum
 go 1.21.3
 
 require (
-	github.com/a-h/templ v0.2.513
+	github.com/a-h/templ v0.2.543
 	github.com/drhodes/golorem v0.0.0-20220328165741-da82e5b29246
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
