@@ -15,7 +15,7 @@
         "exec:windows": ".\\app.exe",
         "build:windows": "npm-run-all --sequential templ wingo --parallel tailwind",
         "delete:windows": "rm ./app",
-        "start:windows": "npm-run-all --sequential build:linux exec:linux delete:linux"
+        "start:windows": "npm-run-all --sequential build:windows exec:windows delete:windows"
     },
     "devDependencies": {
         "daisyui": "^4.5.0",
