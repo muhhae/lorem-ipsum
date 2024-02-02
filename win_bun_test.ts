@@ -2,12 +2,12 @@ import { $ } from 'bun'
 
 async function bun_build() {
     const start = performance.now()
-    await $`bun build:windows`
+    await $`bun build:windows`.quiet()
     return performance.now() - start
 }
 async function node_build() {
     const start = performance.now()
-    await $`npm run build:windows`
+    await $`npm run build:windows`.quiet()
     return performance.now() - start
 }
 
