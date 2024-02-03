@@ -17,8 +17,8 @@ type JwtClaims struct {
 	jwt.StandardClaims
 }
 
+// Soft Auth implement a way to identify user without kicking them out
 func SoftAuth(next echo.HandlerFunc) echo.HandlerFunc {
-
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
 		panic("JWT_SECRET not set")
@@ -63,6 +63,7 @@ func SoftAuth(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+// Its HARD Auth if not authenticated/authorized Get the fuck Out
 func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 
 	jwtSecret := os.Getenv("JWT_SECRET")
