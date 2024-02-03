@@ -138,7 +138,7 @@ func Post(postData PostData) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n            slide: 0,\n        }\" class=\"w-full rounded-none card mb-2 p-4 text-base-content\"><div x-data=\"{\n				scrollRight: (n) =&gt; {\n					$el.scrollLeft += n * $el.offsetWidth;\n				},\n                onScroll : () =&gt; {\n                    slide = Math.floor($el.scrollLeft / $el.offsetWidth);\n                }\n			}\" x-on:scroll=\"onScroll()\" class=\"lg:h-[35vw] h-[85vw] lg:w-[35vw] w-[85vw] mx-auto carousel carousel-center space-x-2 rounded-lg bg-transparent\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n            slide: 0,\n            scroll: null\n        }\" class=\"w-full rounded-none card mb-2 p-4 text-base-content\"><div x-data=\"{\n				scrollRight: (n) =&gt; {\n					$el.scrollLeft += n * $el.offsetWidth;\n				},\n                onScroll : () =&gt; {\n                    slide = Math.floor($el.scrollLeft / $el.offsetWidth);\n                }\n			}\" x-init=\"scroll = scrollRight\" x-on:scroll=\"onScroll()\" class=\"lg:h-[35vw] h-[85vw] lg:w-[35vw] w-[85vw] mx-auto carousel carousel-center space-x-2 rounded-lg bg-transparent\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -177,7 +177,7 @@ func Post(postData PostData) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Username)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 98, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 100, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -190,7 +190,7 @@ func Post(postData PostData) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Content)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 99, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 101, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -245,7 +245,7 @@ func swapIndicator(size int, id string) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("scroll(%d - slide)", i)))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("scroll(%d - slide); ", i)))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -390,7 +390,7 @@ func LikeCount(likeCount int, postID string) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(likeCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 263, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 265, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
