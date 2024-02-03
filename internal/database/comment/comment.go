@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/muhhae/lorem-ipsum/internal/database/connection"
@@ -34,6 +35,17 @@ func (c *Comment) Save() (primitive.ObjectID, error) {
 		return primitive.NilObjectID, err
 	}
 	return res.InsertedID.(primitive.ObjectID), nil
+}
+
+func DeleteByPost(postID primitive.ObjectID) error {
+	_, err := connection.GetDB().Comments.DeleteMany(context.Background(), bson.M{
+		"post_id": postID,
+	})
+	return err
+}
+
+func Delete(id primitive.ObjectID) error {
+	return errors.New("TODO")
 }
 
 func FindAll(filter bson.M) ([]Comment, error) {
