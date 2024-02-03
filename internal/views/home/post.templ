@@ -3,6 +3,7 @@ package home
 import (
 	"github.com/muhhae/lorem-ipsum/internal/views/util"
 	"strconv"
+	"fmt"
 )
 
 type ReactData struct {
@@ -69,23 +70,20 @@ templ Post(postData PostData) {
 	<div
 		x-data="{
             slide: 0,
+            scroll: null
         }"
 		class="w-full rounded-none card mb-2 p-4 text-base-content"
 	>
 		<div
 			x-data="{
-				scrollLeft: () => {
-					$el.scrollLeft -= $el.offsetWidth;
-
-				},
-				scrollRight: () => {
-					$el.scrollLeft += $el.offsetWidth;
+				scrollRight: (n) => {
+					$el.scrollLeft += n * $el.offsetWidth;
 				},
                 onScroll : () => {
                     slide = Math.floor($el.scrollLeft / $el.offsetWidth);
                 }
 			}"
-			x-init="onScroll()"
+			x-init="onScroll();scroll=scrollRight"
 			x-on:scroll="onScroll()"
 			class="lg:h-[35vw] h-[85vw] lg:w-[35vw] w-[85vw] mx-auto carousel carousel-center space-x-2 rounded-lg bg-transparent"
 		>
@@ -118,6 +116,8 @@ templ swapIndicator(size int, id string) {
 		>
 			for i := 0; i < size; i++ {
 				<span
+					class="cursor-pointer"
+					x-on:click={ fmt.Sprintf("scroll(%d - slide)", i) }
 					x-show={ "slide !== " + strconv.Itoa(i) }
 				>
 					<svg
@@ -166,7 +166,7 @@ templ swapButton() {
 		class="opacity-0 lg:opacity-100 flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-6"
 	>
 		<button
-			x-on:click="scrollLeft()"
+			x-on:click="scrollRight(-1)"
 			id="prevButton"
 			class="btn btn-circle border-0 hover:bg-neutral-100/30 bg-transparent text-neutral-950  btn-lg"
 		>
@@ -194,7 +194,7 @@ templ swapButton() {
 		class="opacity-0 lg:opacity-100 flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-6"
 	>
 		<button
-			x-on:click="scrollRight()"
+			x-on:click="scrollRight(1)"
 			id="nextButton"
 			class="btn btn-circle border-0 hover:bg-neutral-100/30 bg-transparent text-neutral-950  btn-lg"
 		>
