@@ -138,7 +138,7 @@ func Post(postData PostData) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n            slide: 0,\n            scroll: null\n        }\" class=\"w-full rounded-none card mb-2 p-4 text-base-content\"><div x-data=\"{\n				scrollRight: (n) =&gt; {\n					$el.scrollLeft += n * $el.offsetWidth;\n				},\n                onScroll : () =&gt; {\n                    slide = Math.floor($el.scrollLeft / $el.offsetWidth);\n                }\n			}\" x-init=\"onScroll();scroll=scrollRight\" x-on:scroll=\"onScroll()\" class=\"lg:h-[35vw] h-[85vw] lg:w-[35vw] w-[85vw] mx-auto carousel carousel-center space-x-2 rounded-lg bg-transparent\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n            slide: 0,\n        }\" class=\"w-full rounded-none card mb-2 p-4 text-base-content\"><div x-data=\"{\n				scrollRight: (n) =&gt; {\n					$el.scrollLeft += n * $el.offsetWidth;\n				},\n                onScroll : () =&gt; {\n                    slide = Math.floor($el.scrollLeft / $el.offsetWidth);\n                }\n			}\" x-on:scroll=\"onScroll()\" class=\"lg:h-[35vw] h-[85vw] lg:w-[35vw] w-[85vw] mx-auto carousel carousel-center space-x-2 rounded-lg bg-transparent\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -177,7 +177,7 @@ func Post(postData PostData) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Username)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 100, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 98, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -190,7 +190,7 @@ func Post(postData PostData) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Content)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 101, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 99, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -295,7 +295,7 @@ func swapButton(size int) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"opacity-100 flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-6\"><button x-show=\"slide &gt; 0\" x-on:click=\"scrollRight(-1)\" id=\"prevButton\" class=\"btn btn-circle border-0 hover:bg-neutral-100/30 bg-transparent text-neutral-950  btn-lg\"><svg class=\"w-4/5 h-4/5 object-contain\" fill=\"currentColor\" version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 462.846 462.845\" xml:space=\"preserve\" transform=\"matrix(-1, 0, 0, 1, 0, 0)\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g> <g id=\"SVGRepo_iconCarrier\"><g><g><path d=\"M173.113,4.671c-4.812-4.961-10.544-5.561-15.465-3.705c-2.829,0.366-5.683,1.488-8.331,3.705 c-21.018,17.61-41.223,36.122-60.667,55.467c-8.366,8.322-4.223,19.296,3.488,24.136c40.654,48.365,87.067,96.255,127.663,144.666 c-46.05,46.266-90.437,98.67-134.62,146.657c-4.956,5.383-5.152,11.73-2.775,16.92c0.378,4.936,3.364,9.455,7.663,12.781 c20.218,15.614,39.748,32.077,58.676,49.23c4.763,7.815,15.886,12.127,24.362,3.788c67.631-66.49,126.845-141.432,201.06-201.057 c2.036-1.636,3.407-3.428,4.261-5.281c4.245-5.586,5.316-13.649-0.798-20.251C308.419,156.975,244.086,77.817,173.113,4.671z M162.386,424.945c-14.83-13.086-30.039-25.689-45.562-37.942c42.155-47.078,85.617-97.578,130.822-141.879 c2.355-2.306,3.656-4.834,4.25-7.373c3.783-5.576,4.672-13.345-0.782-19.88c-41.015-49.129-87.973-97.629-129.219-146.558 c12.448-12.002,25.293-23.577,38.364-34.903c63.518,66.445,122.146,137.313,184.153,205.15 C277.899,296.685,223.053,363.73,162.386,424.945z\"></path></g></g></g></svg></button></div><div class=\"opacity-100 flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-6\"><button x-show=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-show.important=\"slide &gt; 0\" class=\"flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-6\"><span x-on:click=\"scrollRight(-1)\" class=\"btn btn-circle border-0 hover:bg-neutral-100/30 bg-transparent text-neutral-950  btn-lg\"><svg class=\"w-4/5 h-4/5 object-contain\" fill=\"currentColor\" version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 462.846 462.845\" xml:space=\"preserve\" transform=\"matrix(-1, 0, 0, 1, 0, 0)\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g> <g id=\"SVGRepo_iconCarrier\"><g><g><path d=\"M173.113,4.671c-4.812-4.961-10.544-5.561-15.465-3.705c-2.829,0.366-5.683,1.488-8.331,3.705 c-21.018,17.61-41.223,36.122-60.667,55.467c-8.366,8.322-4.223,19.296,3.488,24.136c40.654,48.365,87.067,96.255,127.663,144.666 c-46.05,46.266-90.437,98.67-134.62,146.657c-4.956,5.383-5.152,11.73-2.775,16.92c0.378,4.936,3.364,9.455,7.663,12.781 c20.218,15.614,39.748,32.077,58.676,49.23c4.763,7.815,15.886,12.127,24.362,3.788c67.631-66.49,126.845-141.432,201.06-201.057 c2.036-1.636,3.407-3.428,4.261-5.281c4.245-5.586,5.316-13.649-0.798-20.251C308.419,156.975,244.086,77.817,173.113,4.671z M162.386,424.945c-14.83-13.086-30.039-25.689-45.562-37.942c42.155-47.078,85.617-97.578,130.822-141.879 c2.355-2.306,3.656-4.834,4.25-7.373c3.783-5.576,4.672-13.345-0.782-19.88c-41.015-49.129-87.973-97.629-129.219-146.558 c12.448-12.002,25.293-23.577,38.364-34.903c63.518,66.445,122.146,137.313,184.153,205.15 C277.899,296.685,223.053,363.73,162.386,424.945z\"></path></g></g></g></svg></span></div><div x-show=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -303,7 +303,7 @@ func swapButton(size int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" x-on:click=\"scrollRight(1)\" id=\"nextButton\" class=\"btn btn-circle border-0 hover:bg-neutral-100/30 bg-transparent text-neutral-950  btn-lg\"><svg class=\"w-4/5 h-4/5 object-contain\" fill=\"currentColor\" version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 462.846 462.845\" xml:space=\"preserve\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g> <g id=\"SVGRepo_iconCarrier\"><g><g><path d=\"M173.113,4.671c-4.812-4.961-10.544-5.561-15.465-3.705c-2.829,0.366-5.683,1.488-8.331,3.705 c-21.018,17.61-41.223,36.122-60.667,55.467c-8.366,8.322-4.223,19.296,3.488,24.136c40.654,48.365,87.067,96.255,127.663,144.666 c-46.05,46.266-90.437,98.67-134.62,146.657c-4.956,5.383-5.152,11.73-2.775,16.92c0.378,4.936,3.364,9.455,7.663,12.781 c20.218,15.614,39.748,32.077,58.676,49.23c4.763,7.815,15.886,12.127,24.362,3.788c67.631-66.49,126.845-141.432,201.06-201.057 c2.036-1.636,3.407-3.428,4.261-5.281c4.245-5.586,5.316-13.649-0.798-20.251C308.419,156.975,244.086,77.817,173.113,4.671z M162.386,424.945c-14.83-13.086-30.039-25.689-45.562-37.942c42.155-47.078,85.617-97.578,130.822-141.879 c2.355-2.306,3.656-4.834,4.25-7.373c3.783-5.576,4.672-13.345-0.782-19.88c-41.015-49.129-87.973-97.629-129.219-146.558 c12.448-12.002,25.293-23.577,38.364-34.903c63.518,66.445,122.146,137.313,184.153,205.15 C277.899,296.685,223.053,363.73,162.386,424.945z\"></path></g></g></g></svg></button></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-6\"><span x-on:click=\"scrollRight(1)\" class=\"btn btn-circle border-0 hover:bg-neutral-100/30 bg-transparent text-neutral-950  btn-lg\"><svg class=\"w-4/5 h-4/5 object-contain\" fill=\"currentColor\" version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 462.846 462.845\" xml:space=\"preserve\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g> <g id=\"SVGRepo_iconCarrier\"><g><g><path d=\"M173.113,4.671c-4.812-4.961-10.544-5.561-15.465-3.705c-2.829,0.366-5.683,1.488-8.331,3.705 c-21.018,17.61-41.223,36.122-60.667,55.467c-8.366,8.322-4.223,19.296,3.488,24.136c40.654,48.365,87.067,96.255,127.663,144.666 c-46.05,46.266-90.437,98.67-134.62,146.657c-4.956,5.383-5.152,11.73-2.775,16.92c0.378,4.936,3.364,9.455,7.663,12.781 c20.218,15.614,39.748,32.077,58.676,49.23c4.763,7.815,15.886,12.127,24.362,3.788c67.631-66.49,126.845-141.432,201.06-201.057 c2.036-1.636,3.407-3.428,4.261-5.281c4.245-5.586,5.316-13.649-0.798-20.251C308.419,156.975,244.086,77.817,173.113,4.671z M162.386,424.945c-14.83-13.086-30.039-25.689-45.562-37.942c42.155-47.078,85.617-97.578,130.822-141.879 c2.355-2.306,3.656-4.834,4.25-7.373c3.783-5.576,4.672-13.345-0.782-19.88c-41.015-49.129-87.973-97.629-129.219-146.558 c12.448-12.002,25.293-23.577,38.364-34.903c63.518,66.445,122.146,137.313,184.153,205.15 C277.899,296.685,223.053,363.73,162.386,424.945z\"></path></g></g></g></svg></span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -390,7 +390,7 @@ func LikeCount(likeCount int, postID string) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(likeCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 267, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 263, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
