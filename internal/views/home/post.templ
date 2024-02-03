@@ -163,7 +163,7 @@ templ swapIndicator(size int, id string) {
 
 templ swapButton() {
 	<div
-		class="opacity-100 flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-6"
+		class="opacity-0 lg:opacity-100 flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-6"
 	>
 		<button
 			x-on:click="scrollLeft()"
@@ -191,7 +191,7 @@ templ swapButton() {
 		</button>
 	</div>
 	<div
-		class="opacity-100 flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-6"
+		class="opacity-0 lg:opacity-100 flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-6"
 	>
 		<button
 			x-on:click="scrollRight()"
