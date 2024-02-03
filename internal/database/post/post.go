@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/muhhae/lorem-ipsum/internal/database/comment"
 	"github.com/muhhae/lorem-ipsum/internal/database/connection"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -37,6 +38,16 @@ func (p *Post) Save() (primitive.ObjectID, error) {
 	return id.InsertedID.(primitive.ObjectID), err
 }
 
+func Delete(id primitive.ObjectID) error {
+	_, err := connection.GetDB().Posts.DeleteOne(context.Background(), bson.M{
+		"_id": id,
+	})
+	if err != nil {
+		return err
+	}
+	return comment.DeleteByPost(id)
+}
+
 func FindOne(filter bson.M) (*Post, error) {
 	var post Post
 	err := connection.GetDB().Posts.FindOne(context.Background(), filter).Decode(&post)
@@ -44,7 +55,7 @@ func FindOne(filter bson.M) (*Post, error) {
 }
 
 const (
-	postLimit int64 = 2
+	postLimit int64 = 3
 )
 
 func RetrievePosts(filter bson.M, iteration int64) ([]Post, error) {

@@ -85,6 +85,34 @@ func Upload(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusOK)
 }
+func Delete(c echo.Context) error {
+	ownerID := c.Get("id")
+	if ownerID == "" {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
+	postIDstr := c.Param("id")
+	if postIDstr == "" {
+		return c.String(http.StatusBadRequest, "Invalid Post")
+	}
+	postID, err := primitive.ObjectIDFromHex(postIDstr)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	postData, err := post.FindOne(bson.M{
+		"_id": postID,
+	})
+	if err != nil {
+		return c.String(http.StatusNotFound, err.Error())
+	}
+	if postData.AuthorID != ownerID {
+		return c.String(http.StatusUnauthorized, "Not yours man")
+	}
+	err = post.Delete(postID)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.NoContent(http.StatusOK)
+}
 
 func Default(c echo.Context) error {
 	if c.QueryParam("olderThan") != "" {

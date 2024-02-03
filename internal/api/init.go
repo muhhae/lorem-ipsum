@@ -38,6 +38,7 @@ func InitPost(g *echo.Group) {
 	p := g.Group("/post")
 	p.POST("/upload", post.Upload, Auth)
 	p.GET("/Default", post.Default, SoftAuth)
+	p.DELETE("/:id", post.Delete, Auth)
 }
 
 func initComment(g *echo.Group) {
