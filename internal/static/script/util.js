@@ -54,11 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (Images.length <= 0) {
             alert('You must select at least one image')
             e.preventDefault()
+            Alpine.store('postUploading', false)
             return
         }
         if (Images.length > maxFileCount) {
             alert('You can only upload up to 8 images')
             e.preventDefault()
+            Alpine.store('postUploading', false)
             return
         }
         Images.forEach(image => {
@@ -66,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (image.size > maxFileSize) {
                 alert('File size must be less than 5MB')
                 e.preventDefault()
+                Alpine.store('postUploading', false)
                 return
             }
             formData.append('images', image)
@@ -76,18 +79,17 @@ document.addEventListener('DOMContentLoaded', () => {
             body: formData
         }).then(res => {
             if (!res.ok) {
-                alert(res.text)
+                alert(res.body)
             } else {
                 Images = []
                 selectedImages.innerHTML = ''
                 e.target.reset()
-                // location.reload()
                 loader = document.getElementById("newer-post-loader")
                 if (loader) {
                     htmx.trigger(loader, 'update')
-                    Alpine.store('postUploading', false)
                 }
             }
+            Alpine.store('postUploading', false)
         })
 
     })

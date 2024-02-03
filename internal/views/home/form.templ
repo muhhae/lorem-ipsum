@@ -33,10 +33,10 @@ templ Form() {
 				</label>
 			</div>
 			<div class="flex-none form-control">
-				<div x-data="{ key: $store.postUploading }" x-show="$store.postUploading" class="btn btn-primary btn-disabled">
+				<div x-data="{ key: $store.postUploading }" x-show.important="$store.postUploading" class="btn btn-primary btn-disabled">
 					<span class="loading loading-lg"></span>
 				</div>
-				<button x-data="{ key: $store.postUploading }" x-show="!$store.postUploading" type="submit" class="btn btn-primary text-lg">
+				<button x-data="{ key: $store.postUploading }" x-show.important="!$store.postUploading" type="submit" class="btn btn-primary text-lg">
 					Post
 				</button>
 			</div>
