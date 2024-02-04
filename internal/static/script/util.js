@@ -24,18 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let cloneCounter = 0
     fileInput.addEventListener('change', (e) => {
         files = e.target.files
+        if (Images.length + files.length > maxFileCount) {
+            alert('You can only upload up to 8 images')
+            return
+        }
         Array.from(files).forEach(file => {
-            if (Images.length >= maxFileCount) {
-                alert('You can only upload up to 8 images')
-                return
-            }
             Images.push(file)
+            var url = URL.createObjectURL(file)
             var template = document.getElementById('selected-file-template')
             var clone = template.content.cloneNode(true)
             let id = "selected-file-" + cloneCounter++
             clone.querySelector('div').id = id
-            var fileNameElement = clone.querySelector('.file-name')
-            fileNameElement.textContent = file.name
+            var imageElement = clone.querySelector('.file-image')
+            imageElement.src = url
             var removeButton = clone.querySelector('.remove-button')
             removeButton.addEventListener('click', (e) => {
                 e.preventDefault()
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return
         }
         Images.forEach(image => {
-            console.log('image :', image)
+            // console.log('image :', image)
             if (image.size > maxFileSize) {
                 alert('File size must be less than 5MB')
                 e.preventDefault()
@@ -73,13 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             formData.append('images', image)
         })
-        console.log('formData :', Array.from(formData.entries()))
+        // console.log('formData :', Array.from(formData.entries()))
         await fetch('/api/v1/post/upload', {
             method: 'POST',
             body: formData
         }).then(res => {
             if (!res.ok) {
-                alert(res.body)
+                res.text().then(txt => { alert(txt) })
             } else {
                 Images = []
                 selectedImages.innerHTML = ''
