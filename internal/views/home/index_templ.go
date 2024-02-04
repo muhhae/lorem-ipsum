@@ -11,9 +11,6 @@ import "io"
 import "bytes"
 
 import "github.com/muhhae/lorem-ipsum/pkg/template"
-
-// import "github.com/drhodes/golorem"
-// import "math/rand"
 import "github.com/muhhae/lorem-ipsum/internal/views/shared"
 
 func Index() templ.Component {
