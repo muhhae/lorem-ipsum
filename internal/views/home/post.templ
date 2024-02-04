@@ -97,7 +97,7 @@ templ Post(postData PostData) {
 			}
 		</div>
 		@swapIndicator(len(postData.ImgSrc), postData.PostID)
-		<div class="card-body p-2">
+		<div class="card-body px-2 py-0">
 			<h2 class="card-title text-base-content font-bold">{ postData.Username }</h2>
 			{ postData.Content }
 		</div>
@@ -110,10 +110,10 @@ templ Post(postData PostData) {
 }
 
 templ swapIndicator(size int, id string) {
-	if size > 1 {
-		<div
-			class="h-4 flex flex-row justify-center items-center  mt-2 w-full"
-		>
+	<div
+		class="h-4 flex flex-row justify-center items-center  mt-2 w-full"
+	>
+		if size > 1 {
 			for i := 0; i < size; i++ {
 				<span
 					class="cursor-pointer"
@@ -157,14 +157,14 @@ templ swapIndicator(size int, id string) {
 					</svg>
 				</span>
 			}
-		</div>
-	}
+		}
+	</div>
 }
 
 templ swapButton(size int) {
 	<div
 		x-show.important="slide > 0"
-		class="flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-6"
+		class="flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-8"
 	>
 		<span
 			x-on:click="scrollRight(-1)"
@@ -192,7 +192,7 @@ templ swapButton(size int) {
 	</div>
 	<div
 		x-show={ fmt.Sprintf("slide < %d", size-1) }
-		class="flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-6"
+		class="flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-8"
 	>
 		<span
 			x-on:click="scrollRight(1)"
