@@ -1,16 +1,15 @@
 package component
 
 templ Navbar() {
-	@navbarScript()
-	<div class="navbar bg-base-300 fixed top-0 z-50">
+	<div
+		x-data="{
+            init: () => {
+		        document.body.style.marginTop = `${$el.offsetHeight}px`;
+                console.log('Success', document.body.style.marginTop, $el.offsetHeight)
+            }
+        }"
+		class="navbar bg-base-300 fixed top-0 z-50"
+	>
 		{ children... }
 	</div>
-}
-
-script navbarScript() {
-	window.addEventListener("DOMContentLoaded", function() {
-		var navbar = document.querySelector(".navbar");
-		var navbarHeight = navbar.offsetHeight;
-		document.body.style.paddingTop = `${navbarHeight}px`;
-	});
 }

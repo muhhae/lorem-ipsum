@@ -23,11 +23,7 @@ func Navbar() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = navbarScript().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"navbar bg-base-300 fixed top-0 z-50\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n            init: () =&gt; {\n		        document.body.style.marginTop = `${$el.offsetHeight}px`;\n                console.log(&#39;Success&#39;, document.body.style.marginTop, $el.offsetHeight)\n            }\n        }\" class=\"navbar bg-base-300 fixed top-0 z-50\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -44,18 +40,4 @@ func Navbar() templ.Component {
 		}
 		return templ_7745c5c3_Err
 	})
-}
-
-func navbarScript() templ.ComponentScript {
-	return templ.ComponentScript{
-		Name: `__templ_navbarScript_f296`,
-		Function: `function __templ_navbarScript_f296(){window.addEventListener("DOMContentLoaded", function() {
-		var navbar = document.querySelector(".navbar");
-		var navbarHeight = navbar.offsetHeight;
-		document.body.style.paddingTop = ` + "`" + `${navbarHeight}px` + "`" + `;
-	});
-}`,
-		Call:       templ.SafeScript(`__templ_navbarScript_f296`),
-		CallInline: templ.SafeScriptInline(`__templ_navbarScript_f296`),
-	}
 }

@@ -31,7 +31,7 @@ func NavBar() templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex-1\"><a class=\"btn btn-ghost text-primary font-black text-xl sm:text-3xl\">Lorem Ipsum</a></div><div class=\"flex-none flex space-x-1 md:space-x-4\" hx-get=\"/api/v1/user/myName\" hx-target=\"#where-the-username-is\" hx-swap=\"innerHTML\" hx-trigger=\"load\" hx-on::after-swap=\"profileScript(event)\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex-1\"><a class=\"btn btn-ghost text-primary font-black text-xl sm:text-3xl\">Lorem Ipsum</a></div><div x-data=\"{\n                loggedIn : false,\n            }\" class=\"flex-none flex space-x-1 md:space-x-4\" hx-get=\"/api/v1/user/myName\" hx-target=\"#where-the-username-is\" hx-swap=\"innerHTML\" hx-trigger=\"load\" x-on:htmx:after-swap=\"loggedIn = true; $refs.loginbtn.remove()\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -39,11 +39,7 @@ func NavBar() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = profileScript().Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a id=\"remove-this\" href=\"/login\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">Sign In</a><div id=\"remove-this-hidden\" class=\"hidden h-full dropdown dropdown-end\"><div><button id=\"where-the-username-is\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">username</button></div><ul tabindex=\"0\" class=\"menu menu-sm dropdown-content mt-3 z-[1] \n                        p-2 shadow bg-base-300 w-52\"><li><a hx-get=\"/api/v1/user/logout\" hx-swap=\"none\">Logout</a></li></ul></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a x-ref=\"loginbtn\" href=\"/login\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">Sign In</a><div x-show=\"loggedIn\" class=\"h-full dropdown dropdown-end\"><div><button id=\"where-the-username-is\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">username</button></div><ul tabindex=\"0\" class=\"rounded-xl menu menu-sm dropdown-content mt-3 z-[1] \n                        p-2 shadow bg-base-300 w-52\"><li class=\"rounded-sm\"><a hx-get=\"/api/v1/user/logout\" hx-swap=\"none\">Logout</a></li></ul></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -53,30 +49,6 @@ func NavBar() templ.Component {
 			return templ_7745c5c3_Err
 		})
 		templ_7745c5c3_Err = component.Navbar().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if !templ_7745c5c3_IsBuffer {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
-		}
-		return templ_7745c5c3_Err
-	})
-}
-
-func profileScript() templ.Component {
-	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
-		if !templ_7745c5c3_IsBuffer {
-			templ_7745c5c3_Buffer = templ.GetBuffer()
-			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<script>\n\tfunction profileScript(event) {\n\t\tdocument.getElementById('remove-this-hidden').classList.remove('hidden');\n\t\tdocument.getElementById('remove-this').classList.add('hidden');\n\t}\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
