@@ -97,7 +97,7 @@ templ Post(postData PostData) {
 			}
 		</div>
 		@swapIndicator(len(postData.ImgSrc), postData.PostID)
-		<div class="card-body mt-4 p-2">
+		<div class="card-body p-2">
 			<h2 class="card-title text-base-content font-bold">{ postData.Username }</h2>
 			{ postData.Content }
 		</div>
@@ -112,7 +112,7 @@ templ Post(postData PostData) {
 templ swapIndicator(size int, id string) {
 	if size > 1 {
 		<div
-			class="h-4 flex flex-row justify-center items-center  my-2 w-full"
+			class="h-4 flex flex-row justify-center items-center  mt-2 w-full"
 		>
 			for i := 0; i < size; i++ {
 				<span

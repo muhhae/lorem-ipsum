@@ -99,10 +99,6 @@ templ LoadCommentBtn(c CommentData) {
 			},
 		}"
 	>
-		<div x-show="open">
-			@commentLoader(loaderURL(c)) {
-			}
-		</div>
 		if c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex() {
 			<div class="w-full divider divider-end">
 				<button x-on:click="inputToggle()" class="btn btn-xs btn-ghost text-xs">Reply</button>
@@ -122,7 +118,7 @@ templ LoadCommentBtn(c CommentData) {
 				</button>
 			</div>
 		} else {
-			<div class=" divider">
+			<div class="divider">
 				<button
 					x-on:click="toggle()"
 					class="btn btn-ghost btn-xs"
@@ -141,6 +137,10 @@ templ LoadCommentBtn(c CommentData) {
 		}
 		@CommentInput(commentInputURL(c), c.CommentID != "" && c.CommentID != primitive.NilObjectID.Hex()) {
 		}
+		<div x-show="open">
+			@commentLoader(loaderURL(c)) {
+			}
+		</div>
 	</div>
 }
 

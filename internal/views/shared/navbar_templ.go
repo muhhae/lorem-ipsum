@@ -39,7 +39,7 @@ func NavBar() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a x-ref=\"loginbtn\" href=\"/login\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">Sign In</a><div x-show=\"loggedIn\" class=\"h-full dropdown dropdown-end\"><div><button id=\"where-the-username-is\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">username</button></div><ul tabindex=\"0\" class=\"rounded-xl menu menu-sm dropdown-content mt-3 z-[1] \n                        p-2 shadow bg-base-300 w-52\"><li class=\"rounded-sm\"><a hx-get=\"/api/v1/user/logout\" hx-swap=\"none\">Logout</a></li></ul></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a x-ref=\"loginbtn\" href=\"/login\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">Sign In</a><div x-show=\"loggedIn\" class=\"h-full dropdown dropdown-end\"><div><button id=\"where-the-username-is\" class=\"btn md:btn-md btn-sm text-lg md:text-2xl font-bold btn-ghost rounded-btn\">username</button></div><ul tabindex=\"0\" class=\"rounded-xl menu menu-sm dropdown-content mt-3 z-[1] \n                        p-2 shadow bg-base-300 w-52\"><li><a hx-get=\"/api/v1/user/logout\" hx-swap=\"none\">Logout</a></li></ul></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

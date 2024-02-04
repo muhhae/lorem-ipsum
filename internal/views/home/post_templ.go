@@ -170,7 +170,7 @@ func Post(postData PostData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"card-body mt-4 p-2\"><h2 class=\"card-title text-base-content font-bold\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"card-body p-2\"><h2 class=\"card-title text-base-content font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -236,7 +236,7 @@ func swapIndicator(size int, id string) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if size > 1 {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"h-4 flex flex-row justify-center items-center  my-2 w-full\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"h-4 flex flex-row justify-center items-center  mt-2 w-full\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
