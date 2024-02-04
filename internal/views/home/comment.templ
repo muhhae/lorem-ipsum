@@ -38,7 +38,9 @@ templ Comment(c CommentData) {
 				</div>
 			</div>
 		</div>
-		<div class="w-full ml-3 mb-2 py-2">
+		<div
+			class="w-full ml-3 mb-2 py-2"
+		>
 			<div>
 				<div class="text-md font-black">
 					{ c.Username }
@@ -160,7 +162,9 @@ templ commentLoader(url string) {
 
 templ buttonCommentLoader(url string) {
 	<div
-		x-data="{ loading: false }"
+		x-data="{ 
+            loading: false,
+        }"
 		id="loader"
 		hx-swap="outerHTML"
 		hx-get={ url }

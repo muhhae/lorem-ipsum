@@ -40,7 +40,7 @@ func LoadedComment(comments []CommentData) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n            show:false\n        }\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -98,7 +98,7 @@ func Comment(c CommentData) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strings.ToUpper(string([]rune(c.Username)[0])))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 36, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 40, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -111,7 +111,7 @@ func Comment(c CommentData) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(c.Username)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 43, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 49, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -124,7 +124,7 @@ func Comment(c CommentData) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(c.Content)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 46, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 52, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -250,7 +250,7 @@ func LoadCommentBtn(c CommentData) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(c.ReplyCount))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 115, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 121, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -276,7 +276,7 @@ func LoadCommentBtn(c CommentData) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(c.ReplyCount))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 132, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/comment.templ`, Line: 138, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -377,7 +377,7 @@ func buttonCommentLoader(url string) templ.Component {
 			templ_7745c5c3_Var15 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{ loading: false }\" id=\"loader\" hx-swap=\"outerHTML\" hx-get=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{ \n            loading: false,\n        }\" id=\"loader\" hx-swap=\"outerHTML\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -385,7 +385,7 @@ func buttonCommentLoader(url string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-on:response-error=\"console.log(&#39;error&#39;, event.detail)\" x-on:htmx:before-request=\"loading = true\" x-on:htmx:after-request=\"loading = false\" class=\"pb-4 h-12 w-12 flex items-center \" hx-trigger=\"get\"><span class=\"btn-sm mx-auto btn btn-outline btn-circle\" x-on:click=\"htmx.trigger($el.parentElement, &#39;get&#39;)\"><span x-show=\"loading\" class=\"loading loading-spinner loading-xs\"></span> <span x-show=\"!loading\"><svg class=\"h-4 w-4 object-cover\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracurrentColorerCarrier\" stroke-linecurrentcap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_icurrentColoronCarrier\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M9 17a1 1 0 102 0v-6h6a1 1 0 100-2h-6V3a1 1 0 10-2 0v6H3a1 1 0 000 2h6v6z\"></path></g></svg></span></span></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-on:response-error=\"console.log(&#39;error&#39;, event.detail)\" x-on:htmx:before-request=\"loading = true\" x-on:htmx:after-request=\"loading = false\" class=\"pb-4 h-12 w-12 flex items-center \" hx-trigger=\"get\" x-show=\"show\"><span class=\"btn-sm mx-auto btn btn-outline btn-circle\" x-on:click=\"htmx.trigger($el.parentElement, &#39;get&#39;)\"><span x-show=\"loading\" class=\"loading loading-spinner loading-xs\"></span> <span x-show=\"!loading\"><svg class=\"h-4 w-4 object-cover\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracurrentColorerCarrier\" stroke-linecurrentcap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_icurrentColoronCarrier\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M9 17a1 1 0 102 0v-6h6a1 1 0 100-2h-6V3a1 1 0 10-2 0v6H3a1 1 0 000 2h6v6z\"></path></g></svg></span></span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
