@@ -70,14 +70,46 @@ templ Post(postData PostData) {
 	<div
 		x-data="{
             slide: 0,
-            scroll: null
+            scroll: null,
+            inScroll: false
         }"
 		class="w-full rounded-none card mb-2 p-4 text-base-content"
 	>
 		<div
 			x-data="{
-				scrollRight: (n) => {
-					$el.scrollLeft += n * $el.offsetWidth;
+                scrollRight: (n) => {
+                    slideBtn = $el.querySelectorAll('.slide-btn')
+                    slideBtn.forEach((e) => {
+                        e.classList.add('btn-disabled')
+                    }) 
+
+                    $el.classList.add('snap-none')
+                    let target = $el.scrollLeft + n * $el.offsetWidth;
+                    let start = $el.scrollLeft;
+                    let change = target - start;
+                    let duration = 350; // Duration in milliseconds
+                    let startTime = null;
+                    function animateScroll(currentTime) {
+                        if (startTime === null) startTime = currentTime;
+                        let timeElapsed = currentTime - startTime;
+                        let run = ease(timeElapsed, start, change, duration);
+                        $el.scrollLeft = run;
+                        if (timeElapsed < duration) requestAnimationFrame(animateScroll);
+                        else {
+                            slideBtn = $el.querySelectorAll('.slide-btn')
+                            slideBtn.forEach((e) => {
+                                e.classList.remove('btn-disabled')
+                            }) 
+                            $el.classList.remove('snap-none')
+                        }
+                    }
+                    function ease(t, b, c, d) {
+                        t /= d / 2;
+                        if (t < 1) return c / 2 * t * t + b;
+                        t--;
+                        return -c / 2 * (t * (t - 2) - 1) + b;
+                    }
+                    requestAnimationFrame(animateScroll);
 				},
                 onScroll : () => {
                     slide = Math.floor($el.scrollLeft / $el.offsetWidth);
@@ -163,12 +195,12 @@ templ swapIndicator(size int, id string) {
 
 templ swapButton(size int) {
 	<div
-		x-show.important="slide > 0"
+		x-show.important="slide > 0 && !inScroll"
 		class="flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-8"
 	>
 		<span
 			x-on:click="scrollRight(-1)"
-			class="btn btn-circle border-0 bg-neutral-100/40 hover:bg-neutral-100/70 text-neutral-950  btn-lg"
+			class="slide-btn btn btn-circle border-0 bg-neutral-100/40 hover:bg-neutral-100/70 text-neutral-950 btn-lg"
 		>
 			<svg
 				class="w-4/5 h-4/5 object-contain"
@@ -191,12 +223,12 @@ templ swapButton(size int) {
 		</span>
 	</div>
 	<div
-		x-show={ fmt.Sprintf("slide < %d", size-1) }
+		x-show={ fmt.Sprintf("slide < %d && !inScroll", size-1) }
 		class="flex flex-col justify-center items-end absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] right-8"
 	>
 		<span
 			x-on:click="scrollRight(1)"
-			class="btn btn-circle border-0 bg-neutral-100/40 hover:bg-neutral-100/70  text-neutral-950  btn-lg"
+			class="slide-btn btn btn-circle border-0 bg-neutral-100/40 hover:bg-neutral-100/70  text-neutral-950  btn-lg"
 		>
 			<svg
 				class="w-4/5 h-4/5 object-contain"
