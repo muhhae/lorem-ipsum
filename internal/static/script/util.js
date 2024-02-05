@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
             clone.querySelector('div').id = id
             var imageElement = clone.querySelector('.file-image')
             imageElement.src = url
+            imageElement.href = url
+            imageElement.target = "_blank"
             var removeButton = clone.querySelector('.remove-button')
             removeButton.addEventListener('click', (e) => {
                 e.preventDefault()
@@ -65,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return
         }
         Images.forEach(image => {
-            // console.log('image :', image)
             if (image.size > maxFileSize) {
                 alert('File size must be less than 5MB')
                 e.preventDefault()
@@ -74,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             formData.append('images', image)
         })
-        // console.log('formData :', Array.from(formData.entries()))
         await fetch('/api/v1/post/upload', {
             method: 'POST',
             body: formData
