@@ -140,7 +140,7 @@ templ Post(postData PostData) {
 					</g>
 				</svg>
 			</div>
-			{ postData.Content }
+			<div class="text-justify">{ postData.Content }</div>
 		</div>
 		@ReactSection(postData.ReactStruct)
 		@LoadCommentBtn(CommentData{
@@ -209,7 +209,7 @@ templ swapButton(size int) {
 	>
 		<span
 			x-on:click="scrollRight(-1)"
-			class="slide-btn btn btn-circle border-0 bg-neutral-100/40 hover:bg-neutral-100/70 text-neutral-950 btn-lg"
+			class="slide-btn btn btn-circle border-0 bg-neutral-100/30 hover:bg-neutral-100/60 text-neutral-950 btn-lg"
 		>
 			<svg
 				class="w-4/5 h-4/5 object-contain"
@@ -237,7 +237,7 @@ templ swapButton(size int) {
 	>
 		<span
 			x-on:click="scrollRight(1)"
-			class="slide-btn btn btn-circle border-0 bg-neutral-100/40 hover:bg-neutral-100/70  text-neutral-950  btn-lg"
+			class="slide-btn btn btn-circle border-0 bg-neutral-100/30 hover:bg-neutral-100/60  text-neutral-950  btn-lg"
 		>
 			<svg
 				class="w-4/5 h-4/5 object-contain"
