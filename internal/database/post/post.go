@@ -39,13 +39,18 @@ func (p *Post) Save() (primitive.ObjectID, error) {
 }
 
 func Delete(id primitive.ObjectID) error {
-	_, err := connection.GetDB().Posts.DeleteOne(context.Background(), bson.M{
-		"_id": id,
-	})
+	err := comment.DeleteByPost(id)
 	if err != nil {
 		return err
 	}
-	return comment.DeleteByPost(id)
+	err = DeleteReactionByPost(id)
+	if err != nil {
+		return err
+	}
+	_, err = connection.GetDB().Posts.DeleteOne(context.Background(), bson.M{
+		"_id": id,
+	})
+	return err
 }
 
 func FindOne(filter bson.M) (*Post, error) {

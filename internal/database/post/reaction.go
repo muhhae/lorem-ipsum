@@ -2,6 +2,7 @@ package post
 
 import (
 	"context"
+	"errors"
 
 	"github.com/muhhae/lorem-ipsum/internal/database/connection"
 	"go.mongodb.org/mongo-driver/bson"
@@ -39,6 +40,15 @@ func (r *Reaction) Save() (primitive.ObjectID, error) {
 		return primitive.NilObjectID, res.Err()
 	}
 	return currentReaction.ID, nil
+}
+func DeleteReactionByPost(postID primitive.ObjectID) error {
+	col := connection.GetDB().Reactions
+	_, err := col.DeleteMany(context.Background(), bson.M{"post_id": postID})
+	return err
+}
+
+func DeleteReaction(filter bson.M) error {
+	return errors.New("TODO")
 }
 
 func CountReaction(postID primitive.ObjectID) (int64, error) {
