@@ -87,7 +87,7 @@ func postLoader(url string, id string) templ.Component {
 	})
 }
 
-func ManyPost(postDatas []PostData, manyPostType ManyPostType) templ.Component {
+func ManyPost(audience string, postDatas []PostData, manyPostType ManyPostType) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -107,7 +107,7 @@ func ManyPost(postDatas []PostData, manyPostType ManyPostType) templ.Component {
 			}
 		}
 		for _, postData := range postDatas {
-			templ_7745c5c3_Err = Post(postData).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Post(postData, audience).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -125,7 +125,7 @@ func ManyPost(postDatas []PostData, manyPostType ManyPostType) templ.Component {
 	})
 }
 
-func Post(postData PostData) templ.Component {
+func Post(postData PostData, audience string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -138,7 +138,7 @@ func Post(postData PostData) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n            slide: 0,\n            scroll: null,\n            inScroll: false\n        }\" class=\"w-full rounded-none card mb-2 p-4 text-base-content\"><div x-data=\"{\n                scrollRight: (n) =&gt; {\n                    slideBtn = $el.querySelectorAll(&#39;.slide-btn&#39;)\n                    slideBtn.forEach((e) =&gt; {\n                        e.classList.add(&#39;btn-disabled&#39;)\n                    }) \n\n                    $el.classList.add(&#39;snap-none&#39;)\n                    let target = $el.scrollLeft + n * $el.offsetWidth;\n                    let start = $el.scrollLeft;\n                    let change = target - start;\n                    let duration = 350; // Duration in milliseconds\n                    let startTime = null;\n                    function animateScroll(currentTime) {\n                        if (startTime === null) startTime = currentTime;\n                        let timeElapsed = currentTime - startTime;\n                        let run = ease(timeElapsed, start, change, duration);\n                        $el.scrollLeft = run;\n                        if (timeElapsed &lt; duration) requestAnimationFrame(animateScroll);\n                        else {\n                            slideBtn = $el.querySelectorAll(&#39;.slide-btn&#39;)\n                            slideBtn.forEach((e) =&gt; {\n                                e.classList.remove(&#39;btn-disabled&#39;)\n                            }) \n                            $el.classList.remove(&#39;snap-none&#39;)\n                        }\n                    }\n                    function ease(t, b, c, d) {\n                        t /= d / 2;\n                        if (t &lt; 1) return c / 2 * t * t + b;\n                        t--;\n                        return -c / 2 * (t * (t - 2) - 1) + b;\n                    }\n                    requestAnimationFrame(animateScroll);\n				},\n                onScroll : () =&gt; {\n                    slide = Math.floor($el.scrollLeft / $el.offsetWidth);\n                }\n			}\" x-init=\"scroll = scrollRight\" x-on:scroll=\"onScroll()\" class=\"lg:h-[35vw] h-[85vw] lg:w-[35vw] w-[85vw] mx-auto carousel carousel-center space-x-2 rounded-lg bg-transparent\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n            slide: 0,\n            scroll: null,\n            inScroll: false\n        }\" x-ref=\"parentPost\" class=\"w-full rounded-none card mb-2 p-4 text-base-content\"><div x-data=\"{\n                scrollRight: (n) =&gt; {\n                    slideBtn = $el.querySelectorAll(&#39;.slide-btn&#39;)\n                    slideBtn.forEach((e) =&gt; {\n                        e.classList.add(&#39;btn-disabled&#39;)\n                    }) \n\n                    $el.classList.add(&#39;snap-none&#39;)\n                    let target = $el.scrollLeft + n * $el.offsetWidth;\n                    let start = $el.scrollLeft;\n                    let change = target - start;\n                    let duration = 350; // Duration in milliseconds\n                    let startTime = null;\n                    function animateScroll(currentTime) {\n                        if (startTime === null) startTime = currentTime;\n                        let timeElapsed = currentTime - startTime;\n                        let run = ease(timeElapsed, start, change, duration);\n                        $el.scrollLeft = run;\n                        if (timeElapsed &lt; duration) requestAnimationFrame(animateScroll);\n                        else {\n                            slideBtn = $el.querySelectorAll(&#39;.slide-btn&#39;)\n                            slideBtn.forEach((e) =&gt; {\n                                e.classList.remove(&#39;btn-disabled&#39;)\n                            }) \n                            $el.classList.remove(&#39;snap-none&#39;)\n                        }\n                    }\n                    function ease(t, b, c, d) {\n                        t /= d / 2;\n                        if (t &lt; 1) return c / 2 * t * t + b;\n                        t--;\n                        return -c / 2 * (t * (t - 2) - 1) + b;\n                    }\n                    requestAnimationFrame(animateScroll);\n				},\n                onScroll : () =&gt; {\n                    slide = Math.floor($el.scrollLeft / $el.offsetWidth);\n                }\n			}\" x-init=\"scroll = scrollRight\" x-on:scroll=\"onScroll()\" class=\"lg:h-[35vw] h-[85vw] lg:w-[35vw] w-[85vw] mx-auto carousel carousel-center space-x-2 rounded-lg bg-transparent\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -177,20 +177,28 @@ func Post(postData PostData) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Username)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 133, Col: 85}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 134, Col: 85}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><svg class=\"btn btn-ghost btn-xs fill-base-content h-8 object-contain\" fill=\"currentText\" viewBox=\"0 0 32 32\" enable-background=\"new 0 0 32 32\" id=\"Glyph\" version=\"1.1\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g> <g id=\"SVGRepo_iconCarrier\"><path d=\"M16,13c-1.654,0-3,1.346-3,3s1.346,3,3,3s3-1.346,3-3S17.654,13,16,13z\" id=\"XMLID_287_\"></path><path d=\"M6,13c-1.654,0-3,1.346-3,3s1.346,3,3,3s3-1.346,3-3S7.654,13,6,13z\" id=\"XMLID_289_\"></path> <path d=\"M26,13c-1.654,0-3,1.346-3,3s1.346,3,3,3s3-1.346,3-3S27.654,13,26,13z\" id=\"XMLID_291_\"></path></g></svg></div><div class=\"text-justify\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = OptionButton(audience == postData.Username && audience != "", postData.PostID).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"text-justify\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(postData.Content)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 142, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 139, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -222,7 +230,7 @@ func Post(postData PostData) templ.Component {
 	})
 }
 
-func swapIndicator(size int, id string) templ.Component {
+func OptionButton(isOwner bool, postID string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -233,6 +241,40 @@ func swapIndicator(size int, id string) templ.Component {
 		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
 		if templ_7745c5c3_Var6 == nil {
 			templ_7745c5c3_Var6 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		if isOwner {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button hx-delete=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString("/api/v1/post/" + postID))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-confirm=\"Are you sure you wish to delete this Post?\" x-on:htmx:after-on-load=\"$refs.parentPost.remove()\" class=\"btn btn-ghost btn-square btn-sm\" type=\"button\"><svg class=\"object-contain h-3/5\" fill=\"currentColor\" viewBox=\"-3 0 32 32\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\" fill=\"currentColor\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g> <g id=\"SVGRepo_iconCarrier\"><title>trash</title><desc>Created with Sketch Beta.</desc> <defs></defs> <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Icon-Set-Filled\" sketch:type=\"MSLayerGroup\" transform=\"translate(-261.000000, -205.000000)\" fill=\"currentColor\"><path d=\"M268,220 C268,219.448 268.448,219 269,219 C269.552,219 270,219.448 270,220 L270,232 C270,232.553 269.552,233 269,233 C268.448,233 268,232.553 268,232 L268,220 L268,220 Z M273,220 C273,219.448 273.448,219 274,219 C274.552,219 275,219.448 275,220 L275,232 C275,232.553 274.552,233 274,233 C273.448,233 273,232.553 273,232 L273,220 L273,220 Z M278,220 C278,219.448 278.448,219 279,219 C279.552,219 280,219.448 280,220 L280,232 C280,232.553 279.552,233 279,233 C278.448,233 278,232.553 278,232 L278,220 L278,220 Z M263,233 C263,235.209 264.791,237 267,237 L281,237 C283.209,237 285,235.209 285,233 L285,217 L263,217 L263,233 L263,233 Z M277,209 L271,209 L271,208 C271,207.447 271.448,207 272,207 L276,207 C276.552,207 277,207.447 277,208 L277,209 L277,209 Z M285,209 L279,209 L279,207 C279,205.896 278.104,205 277,205 L271,205 C269.896,205 269,205.896 269,207 L269,209 L263,209 C261.896,209 261,209.896 261,211 L261,213 C261,214.104 261.895,214.999 262.999,215 L285.002,215 C286.105,214.999 287,214.104 287,213 L287,211 C287,209.896 286.104,209 285,209 L285,209 Z\" id=\"trash\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg></button>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func swapIndicator(size int, id string) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var7 == nil {
+			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"h-4 flex flex-row justify-center items-center  mt-2 w-full\">")
@@ -290,9 +332,9 @@ func swapButton(size int) templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var7 == nil {
-			templ_7745c5c3_Var7 = templ.NopComponent
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-show.important=\"slide &gt; 0 &amp;&amp; !inScroll\" class=\"hidden sm:flex flex-col justify-center items-start absolute top-4 lg:h-[35vw] h-[85vw] w-[17vw] lg:w-[7vw] left-8\"><span x-on:click=\"scrollRight(-1)\" class=\"slide-btn btn btn-circle border-0 bg-neutral-100/30 hover:bg-neutral-100/60 text-neutral-950 btn-lg\"><svg class=\"w-4/5 h-4/5 object-contain\" fill=\"currentColor\" version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 462.846 462.845\" xml:space=\"preserve\" transform=\"matrix(-1, 0, 0, 1, 0, 0)\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g> <g id=\"SVGRepo_iconCarrier\"><g><g><path d=\"M173.113,4.671c-4.812-4.961-10.544-5.561-15.465-3.705c-2.829,0.366-5.683,1.488-8.331,3.705 c-21.018,17.61-41.223,36.122-60.667,55.467c-8.366,8.322-4.223,19.296,3.488,24.136c40.654,48.365,87.067,96.255,127.663,144.666 c-46.05,46.266-90.437,98.67-134.62,146.657c-4.956,5.383-5.152,11.73-2.775,16.92c0.378,4.936,3.364,9.455,7.663,12.781 c20.218,15.614,39.748,32.077,58.676,49.23c4.763,7.815,15.886,12.127,24.362,3.788c67.631-66.49,126.845-141.432,201.06-201.057 c2.036-1.636,3.407-3.428,4.261-5.281c4.245-5.586,5.316-13.649-0.798-20.251C308.419,156.975,244.086,77.817,173.113,4.671z M162.386,424.945c-14.83-13.086-30.039-25.689-45.562-37.942c42.155-47.078,85.617-97.578,130.822-141.879 c2.355-2.306,3.656-4.834,4.25-7.373c3.783-5.576,4.672-13.345-0.782-19.88c-41.015-49.129-87.973-97.629-129.219-146.558 c12.448-12.002,25.293-23.577,38.364-34.903c63.518,66.445,122.146,137.313,184.153,205.15 C277.899,296.685,223.053,363.73,162.386,424.945z\"></path></g></g></g></svg></span></div><div x-show=\"")
@@ -322,9 +364,9 @@ func ReactSection(reactData ReactData) templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
+		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var9 == nil {
+			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n			loading: false,\n			timeout: null,\n			inRequest: false,\n			afterRequest: function() {\n				this.inRequest = false;\n				this.loading = false;\n				clearTimeout(this.timeout);\n			},\n			beforeRequest: function() {\n				this.inRequest = true;\n				this.timeout = setTimeout(() =&gt; {\n					this.loading = this.inRequest;\n				}, 300);\n			},\n		}\" class=\"react-section card-actions flex flex-col sm:flex-row w-full items-center justify-center my-4\"><span x-show=\"!loading\">")
@@ -370,9 +412,9 @@ func LikeCount(likeCount int, postID string) templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var9 == nil {
-			templ_7745c5c3_Var9 = templ.NopComponent
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div hx-get=\"")
@@ -387,12 +429,12 @@ func LikeCount(likeCount int, postID string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(likeCount))
+		var templ_7745c5c3_Var11 string
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(util.Format(likeCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 306, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/home/post.templ`, Line: 327, Col: 26}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -415,9 +457,9 @@ func LikeButton(liked bool, postID string) templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var11 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var11 == nil {
-			templ_7745c5c3_Var11 = templ.NopComponent
+		templ_7745c5c3_Var12 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var12 == nil {
+			templ_7745c5c3_Var12 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		if liked {
@@ -462,9 +504,9 @@ func DislikeButton(disliked bool, postID string) templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var12 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var12 == nil {
-			templ_7745c5c3_Var12 = templ.NopComponent
+		templ_7745c5c3_Var13 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var13 == nil {
+			templ_7745c5c3_Var13 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		if disliked {
@@ -509,9 +551,9 @@ func EndOfFeed() templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var13 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var13 == nil {
-			templ_7745c5c3_Var13 = templ.NopComponent
+		templ_7745c5c3_Var14 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var14 == nil {
+			templ_7745c5c3_Var14 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"divider\">You've reached the bottom, get a Job!</div>")

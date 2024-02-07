@@ -45,3 +45,8 @@ func FindOne(filter bson.M) (*Image, error) {
 	}
 	return &img, nil
 }
+
+func DeleteMany(filter bson.M) error {
+	_, err := connection.GetDB().Images.DeleteMany(context.Background(), filter)
+	return err
+}

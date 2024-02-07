@@ -111,7 +111,17 @@ func Delete(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	return c.NoContent(http.StatusOK)
+	return c.String(http.StatusOK, "Deleted")
+}
+
+func getAudience(c echo.Context) string {
+	audience, _ := user.FindOne(bson.M{
+		"_id": c.Get("id"),
+	})
+	if audience != nil {
+		return audience.Username
+	}
+	return ""
 }
 
 func Default(c echo.Context) error {
@@ -131,7 +141,7 @@ func Default(c echo.Context) error {
 	if len(postDatas) == 0 {
 		return echotempl.Templ(c, 200, home.EndOfFeed())
 	}
-	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeBoth))
+	return echotempl.Templ(c, 200, home.ManyPost(getAudience(c), postDatas, home.ManyPostTypeBoth))
 }
 
 func Older(c echo.Context) error {
@@ -151,7 +161,7 @@ func Older(c echo.Context) error {
 	if len(postDatas) == 0 {
 		return echotempl.Templ(c, 200, home.EndOfFeed())
 	}
-	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeOlder))
+	return echotempl.Templ(c, 200, home.ManyPost(getAudience(c), postDatas, home.ManyPostTypeOlder))
 
 }
 
@@ -172,7 +182,7 @@ func Newer(c echo.Context) error {
 	if len(postDatas) == 0 {
 		return c.String(http.StatusNoContent, "No newer posts")
 	}
-	return echotempl.Templ(c, 200, home.ManyPost(postDatas, home.ManyPostTypeNewer))
+	return echotempl.Templ(c, 200, home.ManyPost(getAudience(c), postDatas, home.ManyPostTypeNewer))
 }
 
 func PostToPostdatas(posts []post.Post, userID primitive.ObjectID) ([]home.PostData, error) {

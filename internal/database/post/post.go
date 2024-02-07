@@ -6,6 +6,7 @@ import (
 
 	"github.com/muhhae/lorem-ipsum/internal/database/comment"
 	"github.com/muhhae/lorem-ipsum/internal/database/connection"
+	imagemodel "github.com/muhhae/lorem-ipsum/internal/database/image"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -46,6 +47,21 @@ func Delete(id primitive.ObjectID) error {
 	err = DeleteReactionByPost(id)
 	if err != nil {
 		return err
+	}
+	postData, err := FindOne(bson.M{
+		"_id": id,
+	})
+	if err != nil {
+		return err
+	}
+
+	for _, imageID := range postData.ImageIDs {
+		err = imagemodel.DeleteMany(bson.M{
+			"_id": imageID,
+		})
+		if err != nil {
+			return err
+		}
 	}
 	_, err = connection.GetDB().Posts.DeleteOne(context.Background(), bson.M{
 		"_id": id,
