@@ -30,8 +30,9 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/lorem-ipsum:latest
   ssh-pull:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       -
-        name : echo 
-        run : echo "Hello World!!"
+        name : starting SSH-PULL 
+        run : echo "Docker build success, starting SSH pull"
