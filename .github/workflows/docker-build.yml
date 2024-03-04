@@ -37,5 +37,7 @@ jobs:
           username: ${{ secrets.REMOTE_USERNAME }}
           key: ${{ secrets.REMOTE_KEY }}
           script: |
-            pwd
-            /home/ubuntu/App/lorem-ipsum/reload.sh
+            cd App/lorem-ipsum
+            docker compose down
+            docker compose up -d --pull muhhae/lorem-ipsum 
+            docker compose ls
