@@ -38,6 +38,6 @@ jobs:
           key: ${{ secrets.REMOTE_KEY }}
           script: |
             cd App/lorem-ipsum
-            docker compose down
+            docker compose ls
             docker compose up -d --pull muhhae/lorem-ipsum 
             docker compose ls
