@@ -29,10 +29,13 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/lorem-ipsum:latest
-  ssh-pull:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name : starting SSH-PULL 
-        run : echo "Docker build success, starting SSH pull"
+      - 
+        name: reload service on remote server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          key: ${{ secrets.REMOTE_KEY }}
+          script: |
+            pwd
+            /home/ubuntu/App/lorem-ipsum/reload.sh
