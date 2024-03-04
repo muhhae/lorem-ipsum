@@ -32,7 +32,7 @@ volumes:
   mongodb-data:
 ```
 2. Run 
-```cmd 
+```bash 
 docker compose up -d
 # reload service on change or just update lorem ipsum image
 docker compose up -d --pull=muhhae/lorem-ipsum
