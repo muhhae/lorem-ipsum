@@ -29,3 +29,9 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/lorem-ipsum:latest
+  ssh-pull:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name : echo 
+        run : echo "Hello World!!"
