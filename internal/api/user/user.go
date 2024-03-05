@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"net/http"
 	"net/mail"
 	"strings"
@@ -29,12 +28,10 @@ func SignUp(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Please fill in valid input")
 	}
 	count, err := user.Count(bson.M{"email": req.Email})
-	fmt.Println("email", count, err)
 	if count > 0 {
 		return c.String(http.StatusConflict, "User with that Email already exists try sign in")
 	}
 	count, err = user.Count(bson.M{"username": req.Username})
-	fmt.Println("username", count, err)
 	if count > 0 {
 		return c.String(http.StatusConflict, "Username already taken please choose another one")
 	}
@@ -49,8 +46,8 @@ func SignUp(c echo.Context) error {
 		Username: strings.ToLower(req.Username),
 		Password: req.Password,
 	}
-	_, err = newUser.Save()
-	if err != nil {
+	newUser.ID, err = newUser.Save()
+	if err != nil || newUser.ID == primitive.NilObjectID {
 		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 
@@ -61,6 +58,7 @@ func SignUp(c echo.Context) error {
 	c.SetCookie(&http.Cookie{
 		Name:    "jwt",
 		Value:   jwt,
+		Path:    "/",
 		Expires: time.Now().Add(24 * time.Hour),
 	})
 	c.Response().Writer.Header().Set("HX-Redirect", "/")

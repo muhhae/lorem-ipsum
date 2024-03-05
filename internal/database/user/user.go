@@ -3,7 +3,6 @@ package user
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"time"
 
@@ -44,7 +43,6 @@ func FromJSON(u string) (*User, error) {
 }
 
 func Count(filter bson.M) (int64, error) {
-	fmt.Println("filter", filter)
 	db := connection.GetDB()
 	count, err := db.Users.CountDocuments(context.Background(), filter)
 	if err != nil {

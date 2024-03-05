@@ -16,6 +16,7 @@ templ NavBar() {
 			hx-target="#where-the-username-is"
 			hx-swap="innerHTML"
 			hx-trigger="load"
+			x-on:htmx:after-request="console.log(event.detail.xhr)"
 			x-on:htmx:after-swap="loggedIn = true; $refs.loginbtn.remove()"
 		>
 			@component.ThemeSwitch()

@@ -89,16 +89,16 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		})
 
 		if err != nil || token == nil || !token.Valid {
-			return c.NoContent(http.StatusUnauthorized)
+			return c.String(http.StatusUnauthorized, fmt.Sprintln("nil :", token == nil, "err : ", err.Error(), "valid :", token.Valid))
 		}
 		claims, ok := token.Claims.(*JwtClaims)
 		if !ok {
-			return c.NoContent(http.StatusUnauthorized)
+			return c.String(http.StatusUnauthorized, "Claims not Ok")
 
 		}
 		u, err := user.FindOne(bson.M{"_id": claims.ID})
 		if err != nil || u == nil || u.Access == user.Banned {
-			return c.NoContent(http.StatusUnauthorized)
+			return c.String(http.StatusUnauthorized, "User Not Ok")
 		}
 		c.Set("id", claims.ID)
 		return next(c)
