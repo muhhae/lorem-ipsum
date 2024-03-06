@@ -39,7 +39,7 @@ jobs:
           script: |
             cd App/lorem-ipsum
             docker compose up -d --pull muhhae/lorem-ipsum 
-            docker image prune
+            docker image prune -a -f
             docker images 
             docker compose ls
             docker compose ps
