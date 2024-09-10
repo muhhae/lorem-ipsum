@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . ./
 
 RUN npm install
-RUN npx tailwindcss -i internal/static/style/input.css -o internal/static/style/output.css 
+RUN npx tailwindcss -i internal/static/style/input.css -o internal/static/style/output.css
 
 FROM golang:1.21.3 AS go
 WORKDIR /app
@@ -15,6 +15,7 @@ RUN go mod download
 RUN go install github.com/a-h/templ/cmd/templ@latest
 
 RUN templ generate
+RUN go mod tidy
 RUN CGO_ENABLED=0 GOOS=linux go build -o ./app ./cmd/app/.
 
 FROM alpine:latest
